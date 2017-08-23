@@ -16,6 +16,7 @@ namespace ResidualMaterials
         {
 
         }
+        
         SqlConnection objCon;
         DataTable dataTable = new DataTable();
         DataSet dataSet = new DataSet();
@@ -34,7 +35,6 @@ namespace ResidualMaterials
                             W = (int)row["W"],
                             H = (int)row["H"]
                         }).ToList();
-
             return list;
         }
         public List<Balance> ConvertTo(string l, string w, string h)
@@ -50,13 +50,13 @@ namespace ResidualMaterials
             return list;
         }
 
-        public List<Balance> ConvertTo(string l)
+        public List<Balance> ConvertTo(string l, string dim)
         {
             var list = new List<Balance>() { new Balance
             {
                 Type = false,
 
-                //Dim = Convert.ToInt32(dim),
+                Dim = Convert.ToInt32(dim),
                 Length = Convert.ToInt32(l)
             } };
 
@@ -78,7 +78,6 @@ namespace ResidualMaterials
             //saving changes
             SqlCommandBuilder builder = new SqlCommandBuilder(adapter);
             adapter.Update(dataTable);
-
 
             return dataTable;
         }
@@ -115,17 +114,73 @@ namespace ResidualMaterials
             return maxBalanceID + 1;
         }
         
-
-        public void GetItemToCut(DataGridView dgv)
+        public List<Balance> GetItemToCut(DataGridView dgv)
         {
             int balID = (int)dgv.SelectedRows[0].Cells[0].Value;
             MessageBox.Show(balID.ToString());
-            //EnumerableRowCollection<DataRow> itemToCut = from list in listOfData.AsEnumerable() where list.Field<Int32>("BalanceID").Equals(balID) select list;// рабочая строка
             List<Balance> itemToCut2 = (from list in data where list.BalanceID == balID select list).ToList();
             foreach (var item in itemToCut2)
             {
                 MessageBox.Show(item.BalanceID.ToString() + " " + item.W.ToString() + " " + item.Length.ToString());
             }
+            return itemToCut2;
+        }
+
+        public bool CheckingWorkpieceLessThanResidual(DataGridView dgv, TextBox width, TextBox length)
+        {
+            
+            int w = Convert.ToInt32(width.Text);
+            int l = Convert.ToInt32(length.Text);
+            int temp;
+
+            //определяем большую сторону заготовки
+            if (l >= w) { }
+            else { temp = l;
+                   l = w;
+                   w = temp;
+                 }
+            
+            Balance itemToCut = GetItemToCut(dgv)[0];
+
+            if (itemToCut.Length >= l)
+            {
+                if (itemToCut.W >= w)
+                {
+                    return true;
+                }
+                else {
+                        if (itemToCut.Length >= w)
+                        {
+                            if (itemToCut.W >= l)
+
+                            { return true; }
+
+                        }
+                        else
+                            return false;
+                    }
+                
+                    return false;
+            }
+            else {
+                    if (itemToCut.W >= l)
+                    {
+                        if (itemToCut.Length >= w)
+
+                            { return true; }
+
+                        else return false;
+                    }
+                    return false;
+                 }
+        } 
+        public bool CheckingWorkpieceLessThanResidual(DataGridView dgv, TextBox length)
+        {
+            int l = Convert.ToInt32(length.Text);
+            Balance itemToCut = GetItemToCut(dgv)[0];
+
+            if (itemToCut.Length >= l) return true;
+            else return false;
         }
     }
 }
