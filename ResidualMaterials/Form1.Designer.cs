@@ -30,17 +30,17 @@
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -48,15 +48,14 @@
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
             this.cut_out_the_workpiece = new System.Windows.Forms.Button();
-            this.textBox6 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.textBox7 = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.textBox9 = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -67,6 +66,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label12);
+            this.groupBox1.Controls.Add(this.panel1);
             this.groupBox1.Controls.Add(this.textBox5);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.textBox3);
@@ -82,7 +83,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(470, 211);
+            this.groupBox1.Size = new System.Drawing.Size(475, 215);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Общие сведения";
@@ -94,12 +95,14 @@
             this.textBox5.Size = new System.Drawing.Size(100, 20);
             this.textBox5.TabIndex = 21;
             // 
-            // textBox4
+            // label9
             // 
-            this.textBox4.Location = new System.Drawing.Point(141, 117);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 20);
-            this.textBox4.TabIndex = 20;
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(262, 90);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(95, 13);
+            this.label9.TabIndex = 24;
+            this.label9.Text = "Длина заготовки";
             // 
             // textBox3
             // 
@@ -110,44 +113,17 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(364, 117);
+            this.textBox2.Location = new System.Drawing.Point(369, 83);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 20);
             this.textBox2.TabIndex = 18;
             // 
-            // textBox1
+            // textBox4
             // 
-            this.textBox1.Location = new System.Drawing.Point(364, 87);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 17;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(273, 17);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(95, 13);
-            this.label7.TabIndex = 16;
-            this.label7.Text = "Длина заготовки";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(257, 90);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(101, 13);
-            this.label6.TabIndex = 15;
-            this.label6.Text = "Ширина заготовки";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 120);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(115, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Длина листа/полосы";
+            this.textBox4.Location = new System.Drawing.Point(141, 117);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(100, 20);
+            this.textBox4.TabIndex = 20;
             // 
             // label4
             // 
@@ -166,6 +142,22 @@
             this.label3.Size = new System.Drawing.Size(128, 13);
             this.label3.TabIndex = 12;
             this.label3.Text = "Толщина листа/полосы";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 120);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(115, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Длина листа/полосы";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(369, 117);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 17;
             // 
             // label2
             // 
@@ -189,6 +181,15 @@
             this.comboBox1.TabIndex = 4;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(262, 120);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(101, 13);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Ширина заготовки";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -210,14 +211,14 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(3, 16);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView1.Size = new System.Drawing.Size(584, 342);
             this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
-            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
             // groupBox3
             // 
@@ -258,13 +259,6 @@
             this.cut_out_the_workpiece.UseVisualStyleBackColor = true;
             this.cut_out_the_workpiece.Click += new System.EventHandler(this.button2_Click);
             // 
-            // textBox6
-            // 
-            this.textBox6.Location = new System.Drawing.Point(364, 11);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(97, 20);
-            this.textBox6.TabIndex = 23;
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.textBox7);
@@ -272,62 +266,19 @@
             this.panel1.Controls.Add(this.textBox9);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.label11);
-            this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.textBox8);
-            this.panel1.Controls.Add(this.textBox6);
-            this.panel1.Location = new System.Drawing.Point(547, 98);
+            this.panel1.Location = new System.Drawing.Point(3, 77);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(464, 125);
+            this.panel1.Size = new System.Drawing.Size(261, 128);
             this.panel1.TabIndex = 7;
             this.panel1.Visible = false;
             // 
             // textBox7
             // 
-            this.textBox7.Location = new System.Drawing.Point(154, 72);
+            this.textBox7.Location = new System.Drawing.Point(141, 75);
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(100, 20);
             this.textBox7.TabIndex = 25;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(257, 117);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(95, 13);
-            this.label9.TabIndex = 24;
-            this.label9.Text = "Длина заготовки";
-            // 
-            // textBox8
-            // 
-            this.textBox8.Location = new System.Drawing.Point(154, 41);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(100, 20);
-            this.textBox8.TabIndex = 27;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(9, 72);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(128, 13);
-            this.label11.TabIndex = 28;
-            this.label11.Text = "Толщина листа/полосы";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(9, 14);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(53, 13);
-            this.label10.TabIndex = 31;
-            this.label10.Text = "Диаметр";
-            // 
-            // textBox9
-            // 
-            this.textBox9.Location = new System.Drawing.Point(154, 11);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(100, 20);
-            this.textBox9.TabIndex = 32;
             // 
             // label8
             // 
@@ -338,12 +289,53 @@
             this.label8.TabIndex = 33;
             this.label8.Text = "Длина листа/полосы";
             // 
+            // textBox9
+            // 
+            this.textBox9.Location = new System.Drawing.Point(141, 14);
+            this.textBox9.Name = "textBox9";
+            this.textBox9.Size = new System.Drawing.Size(100, 20);
+            this.textBox9.TabIndex = 32;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(9, 14);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(53, 13);
+            this.label10.TabIndex = 31;
+            this.label10.Text = "Диаметр";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 72);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(128, 13);
+            this.label11.TabIndex = 28;
+            this.label11.Text = "Толщина листа/полосы";
+            // 
+            // textBox8
+            // 
+            this.textBox8.Location = new System.Drawing.Point(141, 44);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.Size = new System.Drawing.Size(100, 20);
+            this.textBox8.TabIndex = 27;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label12.Location = new System.Drawing.Point(257, 61);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(144, 13);
+            this.label12.TabIndex = 25;
+            this.label12.Text = "Параметры заготовки:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1217, 633);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.cut_out_the_workpiece);
             this.Controls.Add(this.button1);
@@ -373,7 +365,6 @@
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
@@ -385,7 +376,6 @@
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button cut_out_the_workpiece;
-        private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.Label label9;
@@ -394,6 +384,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label12;
     }
 }
 
