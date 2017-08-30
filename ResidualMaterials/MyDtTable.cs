@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 
 namespace ResidualMaterials
 {
@@ -22,75 +23,104 @@ namespace ResidualMaterials
         DataTable dataTable = new DataTable();
         DataSet dataSet = new DataSet();
         SqlDataAdapter adapter;
-        List<Balance> data;
+        public List<Balance> data;
         int LastBalanceId;
         Balance itemToCutFrom;
 
+        List<Balance> inputMaterial;
         bool isFieldsFilled;
 
 
 
-        public List<Balance> MakingDataList()
+        public List<Balance> MakingDataList(bool type)
         {
-            var list = (from DataRow row in dataTable.Rows
-                        select new Balance
-                        {
-                            BalanceID = (int)row["BalanceID"],
-                            Type = (bool)row["Type"],
-                            Dim = (int)row["Dim"],
-                            Length = (int)row["Lenth"],
-                            W = (int)row["W"],
-                            H = (int)row["H"]
-                        }).ToList();
-            return list;
+            if (type == false)
+            {
+                var list = (from DataRow row in dataTable.Rows where row["Type"].Equals(false)
+               
+                          select new Balance
+                            {
+                                BalanceID = (int)row["BalanceID"],
+                                Type = (bool)row["Type"],
+                                Dim = (int)row["Dim"],
+                                Length = (int)row["Lenth"]
+                            }).ToList();
+                return list;
+            }
+            else
+            {
+                var list = (from DataRow row in dataTable.Rows where row["Type"].Equals(true)
+                            select new Balance
+                            {
+                                BalanceID = (int)row["BalanceID"],
+                                Type = (bool)row["Type"],
+                                Length = (int)row["Lenth"],
+                                W = (int)row["W"],
+                                H = (int)row["H"]
+                            }).ToList();
+                return list;
+            }
         }
-        public List<Balance> ConvertInputDataToList(string l, string w, string h)
+        private List<Balance> ConvertInputDataToList(TextBox l, TextBox w, TextBox h)
         {
             var list = new List<Balance>() { new Balance
             {
                 Type = true,
-                Length = Convert.ToInt32(l),
-                W = Convert.ToInt32(w),
-                H = Convert.ToInt32(h)
+                Length = Convert.ToInt32(l.Text),
+                W = Convert.ToInt32(w.Text),
+                H = Convert.ToInt32(h.Text)
             } };
 
             return list;
         }
 
-        public List<Balance> ConvertInputDataToList(string l, string dim)
+        private List<Balance> ConvertInputDataToList(TextBox l, TextBox dim)
         {
+            int l_ = Convert.ToInt32(l.Text);
+            int dim_ = Convert.ToInt32(dim.Text);
+
             var list = new List<Balance>() { new Balance
             {
                 Type = false,
 
-                Dim = Convert.ToInt32(dim),
-                Length = Convert.ToInt32(l)
+                Dim = dim_,
+                Length = l_
             } };
 
-            return list;
+            return list;           
         }
 
-        public DataTable PushingDataInTable(List<Balance> list)
+        public List<Balance> PushingDataInTable(bool type, TextBox l, TextBox w, TextBox h)
         {
-            if (LastBalanceId == 0) { LastBalanceId = LastRowBalanceId(); }
+            if (LastBalanceId == 0)
+            {
+                LastBalanceId = LastRowBalanceId();
+            }
             else { LastBalanceId++; }
 
-            foreach (var item in list)
+
+            if (type == true)
             {
-                data.Add(item); // добавление материала в List
+                inputMaterial = ConvertInputDataToList(l, w, h); MessageBox.Show("Ploskoe");
+            }
+            else { inputMaterial = ConvertInputDataToList(l, h); MessageBox.Show("Telo vrascheniya"); }
+
+            foreach (var item in inputMaterial)
+            {
+                //data.Add(item); // добавление материала в List
                 dataTable.Rows.Add(LastBalanceId, item.Type, item.Dim, item.Length, item.W, item.H); //добавление материала в таблицу
-                //object[] val = new object[] { BalanceId, item.Type, item.Dim, item.Length, item.W, item.H };
-                //dataTable.LoadDataRow(val, true);
             }
             //saving changes
             builder = new SqlCommandBuilder(adapter);
             adapter.Update(dataTable);
-
-            return dataTable;
+            data = MakingDataList(type);
+            return data;
         }
-
-        public DataTable Load_Data()
+        
+        public DataTable Load_Data(bool type)
         {
+            dataTable.Clear();
+
             objCon = new SqlConnection(connection);
             objCon.Open();
             adapter = new SqlDataAdapter("SELECT * FROM Balance", connection);
@@ -101,10 +131,10 @@ namespace ResidualMaterials
 
             objCon.Close();
 
-            data = MakingDataList();
+            data = MakingDataList(type);
             return dataTable;
         }
-        // доработать
+        
         private int LastRowBalanceId()
         {
             int maxBalanceID;
@@ -121,7 +151,7 @@ namespace ResidualMaterials
             return maxBalanceID + 1;
         }
         
-        public Balance GetItemToCut(DataGridView dgv)
+        private Balance GetItemToCut(DataGridView dgv)
         {
             int balID = (int)dgv.SelectedRows[0].Cells[0].Value;
             MessageBox.Show(balID.ToString());
@@ -138,7 +168,7 @@ namespace ResidualMaterials
             return itemToCutFrom[0];
         }
 
-        public bool CheckIfFieldsAreFilled(DataGridView dgv, bool residualType, TextBox width, TextBox length)
+        private bool CheckIfFieldsAreFilled(DataGridView dgv, bool residualType, TextBox width, TextBox length)
         {
             if (residualType == true)
             {
@@ -155,8 +185,23 @@ namespace ResidualMaterials
                 else return false;
             }
         }
+        public bool CheckIfFieldsAreFilled(TextBox length, TextBox dimheight)
+        {
+            if (!string.IsNullOrEmpty(length.Text) && !string.IsNullOrEmpty(dimheight.Text))
 
-        public bool CheckingWorkpieceLessThanResidual(DataGridView dgv, bool residualType, TextBox width, TextBox length)
+            { return true; }
+            else return false;
+        }
+        public bool CheckIfFieldsAreFilled(TextBox length, TextBox width, TextBox dimheight)
+        {
+            if (!string.IsNullOrEmpty(length.Text) && !string.IsNullOrEmpty(width.Text) && !string.IsNullOrEmpty(dimheight.Text))
+
+            { return true; }
+            else return false;
+        }
+
+
+        private bool CheckingWorkpieceLessThanResidual(DataGridView dgv, bool residualType, TextBox width, TextBox length)
         {
             isFieldsFilled = CheckIfFieldsAreFilled(dgv, residualType, width, length);
             if (isFieldsFilled == true)
@@ -224,7 +269,7 @@ namespace ResidualMaterials
             }
         }
 
-        public bool CheckingWorkpieceLessThanResidual(DataGridView dgv, TextBox length)
+        private bool CheckingWorkpieceLessThanResidual(DataGridView dgv, TextBox length)
         {
                 int l = Convert.ToInt32(length.Text);
 
@@ -235,38 +280,77 @@ namespace ResidualMaterials
         public void CutOut(DataGridView dgv, bool type, TextBox width, TextBox length)
         {
             bool possOrNot = CheckingWorkpieceLessThanResidual(dgv, type, width, length);
+            int temp;
+            int length_ = Convert.ToInt32(length.Text);
 
             if (possOrNot == true)
             {
-                int new_Length = 0; 
-                int rowNumber = dgv.SelectedRows[0].Cells[0].RowIndex;
+                int new_Length = 0;
+                int rowNumber = RowToInsert();
 
                 if (type == false)
 
                 {
-                    MessageBox.Show(new_Length.ToString());
+                    new_Length = itemToCutFrom.Length - length_;
 
-                    new_Length = itemToCutFrom.Length - Convert.ToInt32(length.Text);
+                    MessageBox.Show(new_Length.ToString());
                     dataTable.Rows[rowNumber].SetField(dataTable.Columns["Lenth"], new_Length);
                 }
                 else
                 {
                     int new_Width = 0;
-                    if (itemToCutFrom.Length >= Convert.ToInt32(length.Text) && itemToCutFrom.W >= Convert.ToInt32(width.Text))
+                    int width_ = Convert.ToInt32(width.Text);
+L1:
+                    if (itemToCutFrom.Length > length_)
                     {
-                        new_Length = itemToCutFrom.Length - Convert.ToInt32(length.Text);
-                        new_Width = itemToCutFrom.W - Convert.ToInt32(width.Text);
+                        if (itemToCutFrom.W > width_)
+                        {/////////////
+                            new_Length = itemToCutFrom.Length - length_;
+                            new_Width = itemToCutFrom.W - width_;
+                        }
+                        else if (itemToCutFrom.W == width_)
+                        {
+                            new_Length = itemToCutFrom.Length - length_;
+                            new_Width = itemToCutFrom.W;
+                        }
+                        else if (itemToCutFrom.W < width_)
+                        {/////////////
+                            new_Width = itemToCutFrom.W - length_;
+                            new_Length = itemToCutFrom.Length - width_;
+                        }
                     }
-                    else
+
+                    else if (itemToCutFrom.Length == length_)
                     {
-                        new_Width = itemToCutFrom.W - Convert.ToInt32(length.Text);
-                        new_Length = itemToCutFrom.Length - Convert.ToInt32(width.Text);
+                        if (itemToCutFrom.W > width_)
+                        {
+                            new_Length = itemToCutFrom.Length;
+                            new_Width = itemToCutFrom.W - width_;
+                        }
+                    
+                        else if (itemToCutFrom.W == width_)
+                        {
+                            new_Length = 0;
+                            new_Width = 0;
+
+                            //нужно удалять остаток
+                        }
                     }
+
+                    else if (itemToCutFrom.Length < length_)
+                    {                      
+                        temp = length_;
+                        length_ = width_;
+                        width_ = temp;
+                        goto L1;
+                    }
+                    //меняем значения длинны/ширины обратно
+                    temp = length_;
+                    length_ = width_;
+                    width_ = temp;
 
                     MessageBox.Show("new_Length  " +  new_Length.ToString());
                     MessageBox.Show("new_Width  " + new_Width.ToString());
-                    
-
 
                     dataTable.Rows[rowNumber].SetField(dataTable.Columns["Lenth"], new_Length);
                     dataTable.Rows[rowNumber].SetField(dataTable.Columns["W"], new_Width);
@@ -274,11 +358,20 @@ namespace ResidualMaterials
                 }
                 builder = new SqlCommandBuilder(adapter);
                 adapter.Update(dataTable);
-                
                 MessageBox.Show("Заготовка вырезана!)");
             }
             else { MessageBox.Show("Невозможно вырезать заготовку. Параметры заготовки больше параметров остатка!"); }
-            data = MakingDataList();
+            data = MakingDataList(type);
+        }
+        private int RowToInsert()
+        {
+            EnumerableRowCollection<DataRow> col = (from DataRow item in dataTable.AsEnumerable() where item.Field<int>(0).Equals(itemToCutFrom.BalanceID) select item);
+            int id = 0;
+            foreach (var item in col)
+            {
+                id = dataTable.Rows.IndexOf(item);
+            }
+            return id;
         }
     }
 }

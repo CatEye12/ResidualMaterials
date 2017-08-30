@@ -17,32 +17,24 @@ namespace ResidualMaterials
             InitializeComponent();
 
             dt = new MyDtTable();
-            dataGridView1.DataSource = dt.Load_Data();
+            comboBox1.SelectedIndex = 0;
+            dt.Load_Data(residualType);
+            dataGridView1.DataSource = dt.MakingDataList(residualType);
         }
+
         MyDtTable dt;
 
         /// <summary>
         /// false  "Тело вращения"
         /// true   "Плоское"
         /// </summary>
-        bool residualType = false;
+        bool residualType;
 
 
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (residualType == false)
-            {
-                var list = dt.ConvertInputDataToList(textBox8.Text, textBox9.Text);
-                dataGridView1.DataSource = dt.PushingDataInTable(list);
-                MessageBox.Show("Telo vrascheniya");
-            }
-            else
-            {
-                var list = dt.ConvertInputDataToList(textBox3.Text, textBox4.Text, textBox5.Text);
-                dataGridView1.DataSource = dt.PushingDataInTable(list);
-                MessageBox.Show("Ploskoe");
-            }
+            dataGridView1.DataSource = dt.PushingDataInTable(residualType, textBox4, textBox5, textBox3);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -50,22 +42,25 @@ namespace ResidualMaterials
             if (comboBox1.SelectedIndex == 0)
             {
                 residualType = false;
-                panel1.Visible = true;
                 label6.Visible = false;
+                label4.Text = "Диаметр";
                 textBox1.Visible = false;
             }
             else if (comboBox1.SelectedIndex == 1)
             {
                 residualType = true;
-                panel1.Visible = false;
                 label6.Visible = true;
+                label4.Text = "Ширина листа/полосы";
                 textBox1.Visible = true;
             }
+            dt.data = dt.MakingDataList(residualType);
+            dataGridView1.DataSource = dt.data;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             dt.CutOut(dataGridView1, residualType, textBox1, textBox2);
+            dataGridView1.DataSource = dt.data;
         }
     }
 }
