@@ -20,25 +20,49 @@ namespace ResidualMaterials
         
         SqlConnection objCon;
         SqlCommandBuilder builder;
-        DataTable dataTable = new DataTable();
         DataSet dataSet = new DataSet();
-        SqlDataAdapter adapter;
+        SqlDataAdapter adapterR;
+        SqlDataAdapter adapterPlane;
+
+        public DataTable dataTablePl = new DataTable();
+        public DataTable dataTableR = new DataTable();
         public List<Balance> data;
+
         int LastBalanceId;
         Balance itemToCutFrom;
-
         List<Balance> inputMaterial;
-        bool isFieldsFilled;
+        public bool residualType;
 
 
+        public void ManagingUserInterface(ComboBox cmbBX, Label l6, Label l3, Label l4, TextBox txt1, TextBox txt3)
+        {
+            if (cmbBX.SelectedIndex == 0)
+            {
+                residualType = false;
+                l3.Visible = false;
+                l6.Visible = false;
+                l4.Text = "Диаметр";
+                txt1.Visible = false;
+                txt3.Visible = false;
+            }
+            else if (cmbBX.SelectedIndex == 1)
+            {
+                residualType = true;
+                l3.Visible = true;
+                l6.Visible = true;
+                l4.Text = "Ширина листа/полосы";
+                txt1.Visible = true;
+                txt3.Visible = true;
+            }
+        }
 
         public List<Balance> MakingDataList(bool type)
         {
             if (type == false)
             {
-                var list = (from DataRow row in dataTable.Rows where row["Type"].Equals(false)
+                var list = (from DataRow row in dataTableR.Rows where row["Type"].Equals(false)
                
-                          select new Balance
+                            select new Balance
                             {
                                 BalanceID = (int)row["BalanceID"],
                                 Type = (bool)row["Type"],
@@ -49,7 +73,7 @@ namespace ResidualMaterials
             }
             else
             {
-                var list = (from DataRow row in dataTable.Rows where row["Type"].Equals(true)
+                var list = (from DataRow row in dataTablePl.Rows where row["Type"].Equals(true)
                             select new Balance
                             {
                                 BalanceID = (int)row["BalanceID"],
@@ -83,14 +107,14 @@ namespace ResidualMaterials
             {
                 Type = false,
 
-                Dim = dim_,
-                Length = l_
+                Length = l_,
+                Dim = dim_
             } };
 
             return list;           
         }
 
-        public List<Balance> PushingDataInTable(bool type, TextBox l, TextBox w, TextBox h)
+        public void PushingDataInTable(bool type, TextBox l, TextBox w, TextBox h)
         {
             if (LastBalanceId == 0)
             {
@@ -102,37 +126,46 @@ namespace ResidualMaterials
             if (type == true)
             {
                 inputMaterial = ConvertInputDataToList(l, w, h); MessageBox.Show("Ploskoe");
-            }
-            else { inputMaterial = ConvertInputDataToList(l, h); MessageBox.Show("Telo vrascheniya"); }
 
-            foreach (var item in inputMaterial)
-            {
-                //data.Add(item); // добавление материала в List
-                dataTable.Rows.Add(LastBalanceId, item.Type, item.Dim, item.Length, item.W, item.H); //добавление материала в таблицу
+                foreach (var item in inputMaterial)
+                {
+                    dataTablePl.Rows.Add(LastBalanceId, item.Type, item.Dim, item.Length, item.W, item.H); //добавление материала в таблицу
+                }
+                //saving changes
+                builder = new SqlCommandBuilder(adapterPlane);
+                adapterPlane.Update(dataTablePl);
             }
-            //saving changes
-            builder = new SqlCommandBuilder(adapter);
-            adapter.Update(dataTable);
-            data = MakingDataList(type);
-            return data;
+            else
+            {
+                inputMaterial = ConvertInputDataToList(l, w); MessageBox.Show("Telo vrascheniya");
+
+                foreach (var item in inputMaterial)
+                {
+                    dataTableR.Rows.Add(LastBalanceId, item.Type, item.Dim, item.Length, item.W, item.H);
+                }
+                //saving changes
+                builder = new SqlCommandBuilder(adapterR);
+                adapterR.Update(dataTableR);
+            }
         }
         
-        public DataTable Load_Data(bool type)
+        public void Load_Data(bool type)
         {
-            dataTable.Clear();
-
             objCon = new SqlConnection(connection);
             objCon.Open();
-            adapter = new SqlDataAdapter("SELECT * FROM Balance", connection);
+            
+            adapterR = new SqlDataAdapter("SELECT * FROM Balance WHERE Type = 'false'", connection);
+            adapterPlane = new SqlDataAdapter("SELECT * FROM Balance WHERE Type = 'true'", connection);
 
-            adapter.Fill(dataSet);
+            adapterR.Fill(dataSet, "Тело вращения");
+            adapterPlane.Fill(dataSet, "Плоское");
 
-            dataTable = dataSet.Tables[0];
+            dataTableR = dataSet.Tables["Тело вращения"];
+            dataTablePl = dataSet.Tables["Плоское"];
 
             objCon.Close();
 
             data = MakingDataList(type);
-            return dataTable;
         }
         
         private int LastRowBalanceId()
@@ -153,19 +186,14 @@ namespace ResidualMaterials
         
         private Balance GetItemToCut(DataGridView dgv)
         {
-            int balID = (int)dgv.SelectedRows[0].Cells[0].Value;
+            int balID = dgv.SelectedCells[0].RowIndex;
             MessageBox.Show(balID.ToString());
-            List<Balance> itemToCutFrom = (from list in data where list.BalanceID == balID select list).ToList();
 
-
+            return data[balID];
+            
             /* EnumerableRowCollection<DataRow> query = from order in oTable.AsEnumerable()
                                                      where order.Field<SqlHierarchyId>("HierarchyId").GetAncestor(1).Equals(iID)
                                                      select order;*/
-
-
-            //EnumerableRowCollection<DataRow> itemToCutFrom = (from list in dataTable.AsEnumerable() where list.Field<int>("BalanceID").Equals(balID) select list);
-            
-            return itemToCutFrom[0];
         }
 
         private bool CheckIfFieldsAreFilled(DataGridView dgv, bool residualType, TextBox width, TextBox length)
@@ -203,7 +231,8 @@ namespace ResidualMaterials
 
         private bool CheckingWorkpieceLessThanResidual(DataGridView dgv, bool residualType, TextBox width, TextBox length)
         {
-            isFieldsFilled = CheckIfFieldsAreFilled(dgv, residualType, width, length);
+            data = MakingDataList(residualType);
+            bool isFieldsFilled = CheckIfFieldsAreFilled(dgv, residualType, width, length);
             if (isFieldsFilled == true)
             {
                 itemToCutFrom = GetItemToCut(dgv);
@@ -214,7 +243,6 @@ namespace ResidualMaterials
                     int l = Convert.ToInt32(length.Text);
                     int temp;
                     
-
                     //определяем большую сторону заготовки
                     if (l >= w) { }
                     else
@@ -286,7 +314,7 @@ namespace ResidualMaterials
             if (possOrNot == true)
             {
                 int new_Length = 0;
-                int rowNumber = RowToInsert();
+                int rowNumber = RowToInsert(type);
 
                 if (type == false)
 
@@ -294,7 +322,9 @@ namespace ResidualMaterials
                     new_Length = itemToCutFrom.Length - length_;
 
                     MessageBox.Show(new_Length.ToString());
-                    dataTable.Rows[rowNumber].SetField(dataTable.Columns["Lenth"], new_Length);
+                    dataTableR.Rows[rowNumber].SetField(dataTableR.Columns["Lenth"], new_Length);
+
+                    builder = new SqlCommandBuilder(adapterR);
                 }
                 else
                 {
@@ -352,26 +382,71 @@ L1:
                     MessageBox.Show("new_Length  " +  new_Length.ToString());
                     MessageBox.Show("new_Width  " + new_Width.ToString());
 
-                    dataTable.Rows[rowNumber].SetField(dataTable.Columns["Lenth"], new_Length);
-                    dataTable.Rows[rowNumber].SetField(dataTable.Columns["W"], new_Width);
+                    dataTablePl.Rows[rowNumber].SetField(dataTablePl.Columns["Lenth"], new_Length);
+                    dataTablePl.Rows[rowNumber].SetField(dataTablePl.Columns["W"], new_Width);
+
+                    builder = new SqlCommandBuilder(adapterPlane);
 
                 }
-                builder = new SqlCommandBuilder(adapter);
-                adapter.Update(dataTable);
+                adapterR.Update(dataTableR);
+                adapterPlane.Update(dataTablePl);
                 MessageBox.Show("Заготовка вырезана!)");
             }
             else { MessageBox.Show("Невозможно вырезать заготовку. Параметры заготовки больше параметров остатка!"); }
-            data = MakingDataList(type);
+            
+            dgv.DataSource = FillDgv(type);
         }
-        private int RowToInsert()
+        private int RowToInsert(bool type)
         {
-            EnumerableRowCollection<DataRow> col = (from DataRow item in dataTable.AsEnumerable() where item.Field<int>(0).Equals(itemToCutFrom.BalanceID) select item);
             int id = 0;
-            foreach (var item in col)
+            if (type == false)
             {
-                id = dataTable.Rows.IndexOf(item);
+                EnumerableRowCollection<DataRow> col = (from DataRow item in dataTableR.AsEnumerable() where item.Field<int>(0).Equals(itemToCutFrom.BalanceID) select item);
+                foreach (var item in col)
+                {
+                    id = dataTableR.Rows.IndexOf(item);
+                }
             }
+            else
+            {
+                EnumerableRowCollection<DataRow> col = (from DataRow item in dataTablePl.AsEnumerable() where item.Field<int>(0).Equals(itemToCutFrom.BalanceID) select item);
+                foreach (var item in col)
+                {
+                    id = dataTablePl.Rows.IndexOf(item);
+                }
+            }            
             return id;
+        }
+        public DataTable FillDgv(bool type)
+        {
+            DataTable dtToFill = new DataTable();
+            if (type == false)
+            {
+                dtToFill.Columns.Add("Диаметр");
+                dtToFill.Columns.Add("Длинна");
+                for (int i = 0; i < dataTableR.Rows.Count; i++)
+                {
+                    dtToFill.Rows.Add();
+                        
+                    dtToFill.Rows[i]["Диаметр"] = dataTableR.Rows[i]["Dim"];
+                    dtToFill.Rows[i]["Длинна"] = dataTableR.Rows[i]["Lenth"];
+                }
+            }
+            else
+            {
+                dtToFill.Columns.Add("Длинна");
+                dtToFill.Columns.Add("Ширина");
+                dtToFill.Columns.Add("Толщина");
+                for (int i = 0; i < dataTablePl.Rows.Count; i++)
+                {
+                    dtToFill.Rows.Add();
+
+                    dtToFill.Rows[i]["Длинна"] = dataTablePl.Rows[i]["Lenth"];
+                    dtToFill.Rows[i]["Ширина"] = dataTablePl.Rows[i]["W"];
+                    dtToFill.Rows[i]["Толщина"] = dataTablePl.Rows[i]["H"];
+                }
+            }
+            return dtToFill;
         }
     }
 }

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ResidualMaterials
@@ -18,8 +11,8 @@ namespace ResidualMaterials
 
             dt = new MyDtTable();
             comboBox1.SelectedIndex = 0;
-            dt.Load_Data(residualType);
-            dataGridView1.DataSource = dt.MakingDataList(residualType);
+            dt.Load_Data(dt.residualType);
+            dataGridView.DataSource = dt.FillDgv(dt.residualType);
         }
 
         MyDtTable dt;
@@ -28,39 +21,24 @@ namespace ResidualMaterials
         /// false  "Тело вращения"
         /// true   "Плоское"
         /// </summary>
-        bool residualType;
-
-
-
-        private void button1_Click(object sender, EventArgs e)
+        
+        private void Create_Click(object sender, EventArgs e)
         {
-            dataGridView1.DataSource = dt.PushingDataInTable(residualType, textBox4, textBox5, textBox3);
+            dt.PushingDataInTable(dt.residualType, textBox4, textBox5, textBox3);
+
+            dataGridView.DataSource = dt.FillDgv(dt.residualType);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedIndex == 0)
-            {
-                residualType = false;
-                label6.Visible = false;
-                label4.Text = "Диаметр";
-                textBox1.Visible = false;
-            }
-            else if (comboBox1.SelectedIndex == 1)
-            {
-                residualType = true;
-                label6.Visible = true;
-                label4.Text = "Ширина листа/полосы";
-                textBox1.Visible = true;
-            }
-            dt.data = dt.MakingDataList(residualType);
-            dataGridView1.DataSource = dt.data;
-        }
+            dt.ManagingUserInterface(comboBox1, label6, label3, label4, textBox1, textBox3);
 
-        private void button2_Click(object sender, EventArgs e)
+            dataGridView.DataSource = dt.FillDgv(dt.residualType);
+        }
+        
+        private void CutOut_Click(object sender, EventArgs e)
         {
-            dt.CutOut(dataGridView1, residualType, textBox1, textBox2);
-            dataGridView1.DataSource = dt.data;
+            dt.CutOut(dataGridView, dt.residualType, textBox1, textBox2);
         }
     }
 }

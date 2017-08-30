@@ -44,14 +44,14 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
+            this.CreateButton = new System.Windows.Forms.Button();
             this.cut_out_the_workpiece = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
@@ -172,6 +172,7 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "Тело вращения",
@@ -202,7 +203,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.dataGridView1);
+            this.groupBox2.Controls.Add(this.dataGridView);
             this.groupBox2.Location = new System.Drawing.Point(12, 244);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(590, 361);
@@ -210,16 +211,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Остатки";
             // 
-            // dataGridView1
+            // dataGridView
             // 
-            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 16);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dataGridView1.Size = new System.Drawing.Size(584, 342);
-            this.dataGridView1.TabIndex = 0;
+            this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView.Location = new System.Drawing.Point(3, 16);
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.Size = new System.Drawing.Size(584, 342);
+            this.dataGridView.TabIndex = 0;
             // 
             // groupBox3
             // 
@@ -240,15 +241,15 @@
             this.dataGridView2.Size = new System.Drawing.Size(584, 342);
             this.dataGridView2.TabIndex = 0;
             // 
-            // button1
+            // CreateButton
             // 
-            this.button1.Location = new System.Drawing.Point(513, 24);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(131, 22);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Добавить остаток";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.CreateButton.Location = new System.Drawing.Point(513, 24);
+            this.CreateButton.Name = "CreateButton";
+            this.CreateButton.Size = new System.Drawing.Size(131, 22);
+            this.CreateButton.TabIndex = 5;
+            this.CreateButton.Text = "Добавить остаток";
+            this.CreateButton.UseVisualStyleBackColor = true;
+            this.CreateButton.Click += new System.EventHandler(this.Create_Click);
             // 
             // cut_out_the_workpiece
             // 
@@ -258,7 +259,7 @@
             this.cut_out_the_workpiece.TabIndex = 6;
             this.cut_out_the_workpiece.Text = "Вырезать заготовку";
             this.cut_out_the_workpiece.UseVisualStyleBackColor = true;
-            this.cut_out_the_workpiece.Click += new System.EventHandler(this.button2_Click);
+            this.cut_out_the_workpiece.Click += new System.EventHandler(this.CutOut_Click);
             // 
             // Form1
             // 
@@ -267,7 +268,7 @@
             this.ClientSize = new System.Drawing.Size(1217, 633);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.cut_out_the_workpiece);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.CreateButton);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Name = "Form1";
@@ -275,7 +276,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
@@ -298,10 +299,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.DataGridView dataGridView2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button CreateButton;
         private System.Windows.Forms.Button cut_out_the_workpiece;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label12;
