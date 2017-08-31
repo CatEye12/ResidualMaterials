@@ -30,25 +30,26 @@
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtWidthDim = new System.Windows.Forms.TextBox();
+            this.lblWidthDimWP = new System.Windows.Forms.Label();
+            this.txtH = new System.Windows.Forms.TextBox();
+            this.txtLengthWP = new System.Windows.Forms.TextBox();
+            this.txtLength = new System.Windows.Forms.TextBox();
+            this.lblWidthDim = new System.Windows.Forms.Label();
+            this.lblH = new System.Windows.Forms.Label();
+            this.lblLength = new System.Windows.Forms.Label();
+            this.txtWidthWP = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lblWidthWP = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.CreateButton = new System.Windows.Forms.Button();
-            this.cut_out_the_workpiece = new System.Windows.Forms.Button();
+            this.cutOutBtn = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -59,18 +60,18 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.label12);
-            this.groupBox1.Controls.Add(this.textBox5);
-            this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.textBox3);
-            this.groupBox1.Controls.Add(this.textBox2);
-            this.groupBox1.Controls.Add(this.textBox4);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.txtWidthDim);
+            this.groupBox1.Controls.Add(this.lblWidthDimWP);
+            this.groupBox1.Controls.Add(this.txtH);
+            this.groupBox1.Controls.Add(this.txtLengthWP);
+            this.groupBox1.Controls.Add(this.txtLength);
+            this.groupBox1.Controls.Add(this.lblWidthDim);
+            this.groupBox1.Controls.Add(this.lblH);
+            this.groupBox1.Controls.Add(this.lblLength);
+            this.groupBox1.Controls.Add(this.txtWidthWP);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.comboBox1);
-            this.groupBox1.Controls.Add(this.label6);
+            this.groupBox1.Controls.Add(this.lblWidthWP);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
@@ -89,76 +90,81 @@
             this.label12.TabIndex = 25;
             this.label12.Text = "Параметры заготовки:";
             // 
-            // textBox5
+            // txtWidthDim
             // 
-            this.textBox5.Location = new System.Drawing.Point(141, 83);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 20);
-            this.textBox5.TabIndex = 21;
+            this.txtWidthDim.Location = new System.Drawing.Point(141, 83);
+            this.txtWidthDim.Name = "txtWidthDim";
+            this.txtWidthDim.Size = new System.Drawing.Size(100, 20);
+            this.txtWidthDim.TabIndex = 21;
+            this.txtWidthDim.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtWidthDim_KeyPress);
             // 
-            // label9
+            // lblWidthDimWP
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(262, 90);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(95, 13);
-            this.label9.TabIndex = 24;
-            this.label9.Text = "Длина заготовки";
+            this.lblWidthDimWP.AutoSize = true;
+            this.lblWidthDimWP.Location = new System.Drawing.Point(262, 90);
+            this.lblWidthDimWP.Name = "lblWidthDimWP";
+            this.lblWidthDimWP.Size = new System.Drawing.Size(95, 13);
+            this.lblWidthDimWP.TabIndex = 24;
+            this.lblWidthDimWP.Text = "Длина заготовки";
             // 
-            // textBox3
+            // txtH
             // 
-            this.textBox3.Location = new System.Drawing.Point(141, 147);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
-            this.textBox3.TabIndex = 19;
+            this.txtH.Location = new System.Drawing.Point(141, 147);
+            this.txtH.Name = "txtH";
+            this.txtH.Size = new System.Drawing.Size(100, 20);
+            this.txtH.TabIndex = 19;
+            this.txtH.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtH_KeyPress);
             // 
-            // textBox2
+            // txtLengthWP
             // 
-            this.textBox2.Location = new System.Drawing.Point(369, 83);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 18;
+            this.txtLengthWP.Location = new System.Drawing.Point(369, 83);
+            this.txtLengthWP.Name = "txtLengthWP";
+            this.txtLengthWP.Size = new System.Drawing.Size(100, 20);
+            this.txtLengthWP.TabIndex = 18;
+            this.txtLengthWP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox2_KeyPress);
             // 
-            // textBox4
+            // txtLength
             // 
-            this.textBox4.Location = new System.Drawing.Point(141, 117);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 20);
-            this.textBox4.TabIndex = 20;
+            this.txtLength.Location = new System.Drawing.Point(141, 117);
+            this.txtLength.Name = "txtLength";
+            this.txtLength.Size = new System.Drawing.Size(100, 20);
+            this.txtLength.TabIndex = 20;
+            this.txtLength.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLength_KeyPress);
             // 
-            // label4
+            // lblWidthDim
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 90);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(121, 13);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "Ширина листа/полосы";
+            this.lblWidthDim.AutoSize = true;
+            this.lblWidthDim.Location = new System.Drawing.Point(6, 90);
+            this.lblWidthDim.Name = "lblWidthDim";
+            this.lblWidthDim.Size = new System.Drawing.Size(121, 13);
+            this.lblWidthDim.TabIndex = 13;
+            this.lblWidthDim.Text = "Ширина листа/полосы";
             // 
-            // label3
+            // lblH
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 150);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(128, 13);
-            this.label3.TabIndex = 12;
-            this.label3.Text = "Толщина листа/полосы";
+            this.lblH.AutoSize = true;
+            this.lblH.Location = new System.Drawing.Point(6, 150);
+            this.lblH.Name = "lblH";
+            this.lblH.Size = new System.Drawing.Size(128, 13);
+            this.lblH.TabIndex = 12;
+            this.lblH.Text = "Толщина листа/полосы";
             // 
-            // label5
+            // lblLength
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 120);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(115, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Длина листа/полосы";
+            this.lblLength.AutoSize = true;
+            this.lblLength.Location = new System.Drawing.Point(6, 120);
+            this.lblLength.Name = "lblLength";
+            this.lblLength.Size = new System.Drawing.Size(115, 13);
+            this.lblLength.TabIndex = 14;
+            this.lblLength.Text = "Длина листа/полосы";
             // 
-            // textBox1
+            // txtWidthWP
             // 
-            this.textBox1.Location = new System.Drawing.Point(369, 117);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 17;
+            this.txtWidthWP.Location = new System.Drawing.Point(369, 117);
+            this.txtWidthWP.Name = "txtWidthWP";
+            this.txtWidthWP.Size = new System.Drawing.Size(100, 20);
+            this.txtWidthWP.TabIndex = 17;
+            this.txtWidthWP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtWidthWP_KeyPress);
             // 
             // label2
             // 
@@ -183,14 +189,14 @@
             this.comboBox1.TabIndex = 4;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // label6
+            // lblWidthWP
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(262, 120);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(101, 13);
-            this.label6.TabIndex = 15;
-            this.label6.Text = "Ширина заготовки";
+            this.lblWidthWP.AutoSize = true;
+            this.lblWidthWP.Location = new System.Drawing.Point(262, 120);
+            this.lblWidthWP.Name = "lblWidthWP";
+            this.lblWidthWP.Size = new System.Drawing.Size(101, 13);
+            this.lblWidthWP.TabIndex = 15;
+            this.lblWidthWP.Text = "Ширина заготовки";
             // 
             // label1
             // 
@@ -213,12 +219,17 @@
             // 
             // dataGridView
             // 
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(3, 16);
+            this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
+            this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(584, 342);
             this.dataGridView.TabIndex = 0;
             // 
@@ -234,10 +245,13 @@
             // 
             // dataGridView2
             // 
+            this.dataGridView2.AllowUserToAddRows = false;
+            this.dataGridView2.AllowUserToDeleteRows = false;
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView2.Location = new System.Drawing.Point(3, 16);
             this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.ReadOnly = true;
             this.dataGridView2.Size = new System.Drawing.Size(584, 342);
             this.dataGridView2.TabIndex = 0;
             // 
@@ -251,23 +265,32 @@
             this.CreateButton.UseVisualStyleBackColor = true;
             this.CreateButton.Click += new System.EventHandler(this.Create_Click);
             // 
-            // cut_out_the_workpiece
+            // cutOutBtn
             // 
-            this.cut_out_the_workpiece.Location = new System.Drawing.Point(513, 68);
-            this.cut_out_the_workpiece.Name = "cut_out_the_workpiece";
-            this.cut_out_the_workpiece.Size = new System.Drawing.Size(131, 22);
-            this.cut_out_the_workpiece.TabIndex = 6;
-            this.cut_out_the_workpiece.Text = "Вырезать заготовку";
-            this.cut_out_the_workpiece.UseVisualStyleBackColor = true;
-            this.cut_out_the_workpiece.Click += new System.EventHandler(this.CutOut_Click);
+            this.cutOutBtn.Location = new System.Drawing.Point(513, 68);
+            this.cutOutBtn.Name = "cutOutBtn";
+            this.cutOutBtn.Size = new System.Drawing.Size(131, 22);
+            this.cutOutBtn.TabIndex = 6;
+            this.cutOutBtn.Text = "Вырезать заготовку";
+            this.cutOutBtn.UseVisualStyleBackColor = true;
+            this.cutOutBtn.Click += new System.EventHandler(this.CutOut_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.panel1.Location = new System.Drawing.Point(1003, 46);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(163, 141);
+            this.panel1.TabIndex = 7;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1217, 633);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.cut_out_the_workpiece);
+            this.Controls.Add(this.cutOutBtn);
             this.Controls.Add(this.CreateButton);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -288,24 +311,25 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtWidthDim;
+        private System.Windows.Forms.TextBox txtLength;
+        private System.Windows.Forms.TextBox txtH;
+        private System.Windows.Forms.TextBox txtLengthWP;
+        private System.Windows.Forms.TextBox txtWidthWP;
+        private System.Windows.Forms.Label lblWidthWP;
+        private System.Windows.Forms.Label lblLength;
+        private System.Windows.Forms.Label lblWidthDim;
+        private System.Windows.Forms.Label lblH;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.Button CreateButton;
-        private System.Windows.Forms.Button cut_out_the_workpiece;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button cutOutBtn;
+        private System.Windows.Forms.Label lblWidthDimWP;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 
