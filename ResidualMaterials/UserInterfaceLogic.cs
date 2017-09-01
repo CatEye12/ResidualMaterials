@@ -72,14 +72,14 @@ namespace ResidualMaterials
             {
                 if (MyDtTable.residualType == false)
                 {
-                    MyDtTable.widthDim = Convert.ToDouble(w.Text);
-                    MyDtTable.length = Convert.ToDouble(l.Text);
+                    MyDtTable.widthDim = Convert.ToDecimal(w.Text);
+                    MyDtTable.length = Convert.ToDecimal(l.Text);
                 }
                 else
                 {
-                    MyDtTable.widthDim = Convert.ToDouble(w.Text);
-                    MyDtTable.length = Convert.ToDouble(l.Text);
-                    MyDtTable.height = Convert.ToDouble(h.Text);
+                    MyDtTable.widthDim = Convert.ToDecimal(w.Text);
+                    MyDtTable.length = Convert.ToDecimal(l.Text);
+                    MyDtTable.height = Convert.ToDecimal(h.Text);
                 }
             }
             else MessageBox.Show("Заполнены не все параметры остатка!");
@@ -91,12 +91,12 @@ namespace ResidualMaterials
             {
                 if (MyDtTable.residualType == false)
                 {
-                    MyDtTable.lengthWP = Convert.ToDouble(l.Text);
+                    MyDtTable.lengthWP = Convert.ToDecimal(l.Text);
                 }
                 else
                 {
-                    MyDtTable.widthWP = Convert.ToDouble(w.Text);
-                    MyDtTable.lengthWP = Convert.ToDouble(l.Text);
+                    MyDtTable.widthWP = Convert.ToDecimal(w.Text);
+                    MyDtTable.lengthWP = Convert.ToDecimal(l.Text);
                 }
             }
             else MessageBox.Show("Выберите остаток и заполните параметры заготовки!");

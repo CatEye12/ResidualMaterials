@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace ResidualMaterials
@@ -14,17 +15,17 @@ namespace ResidualMaterials
             comboBox1.SelectedIndex = 0;
             dt.Load_Data(MyDtTable.residualType);
 
+            b = new Balance();
+
             //dataGridView.DataSource = dt.data;///dt.FillDgv();
-
-
         }
 
         MyDtTable dt;
+        Balance b; 
         UserInterface usInter;
         
         private void Create_Click(object sender, EventArgs e)
         {
-
             SuperPuper();
             return;
             usInter.CheckIfFieldsAreFilled(txtWidthDim, txtLength, txtH);
@@ -39,7 +40,7 @@ namespace ResidualMaterials
             usInter.CheckType(comboBox1);
             usInter.ManagingUserInterface(lblWidthWP, lblH, lblWidthDim, txtWidthWP, txtH);
 
-            dataGridView.DataSource = dt.FillDgv();
+            //dataGridView.DataSource = dt.FillDgv();
         }
         
         private void CutOut_Click(object sender, EventArgs e)
@@ -47,16 +48,10 @@ namespace ResidualMaterials
             usInter.CheckIfFieldsAreFilled(dataGridView, txtWidthWP, txtLengthWP);
             usInter.ConvTxtToDouble(txtWidthWP, txtLengthWP);
 
-            //var itemIdMoto = (DataLoad.DtStringsMotor)DgMotor.SelectedItem;
-            //var idMotor = itemIdMoto.IdMotorTechData;
-
-            //var itemIdImpeller = (ImpellerClass)DgImpeller.SelectedItem;
-            //var idImpeller = itemIdImpeller.ImpellerId;
-            
             dt.CutOut(dataGridView, MyDtTable.residualType);
         }
 
-         private static void AllowUserInputOnlyNumbers(object sender, KeyPressEventArgs e)
+        private static void AllowUserInputOnlyNumbers(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
                         (e.KeyChar != '.'))
@@ -70,13 +65,12 @@ namespace ResidualMaterials
                 e.Handled = true;
             }
         }
+        
         #region only numbers input
         private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
             AllowUserInputOnlyNumbers(sender, e);
         }
-
-       
         private void txtWidthDim_KeyPress(object sender, KeyPressEventArgs e)
         {
             AllowUserInputOnlyNumbers(sender, e);
@@ -100,22 +94,47 @@ namespace ResidualMaterials
 
         private void SuperPuper()
         {
-            DataGridViewComboBoxColumn ddd = new DataGridViewComboBoxColumn();
-            DataGridViewColumnCollection dd = new DataGridViewColumnCollection(dataGridView);
-            ddd. ("sss","Dasha");
-            dataGridView.Columns.Add(ddd);
+            dataGridView.AutoGenerateColumns = false;
+            dataGridView.AutoSize = true;
+          
+            DataGridViewTextBoxColumn columnBal = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnType = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnDim = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnLenth = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnW = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn columnH = new DataGridViewTextBoxColumn();
+
+            columnBal.Name = "Баланс";
+            columnType.Name = "Тип";
+            columnDim.Name = "Диаметр";
+            columnLenth.Name = "Длина";
+            columnW.Name = "Ширина";
+            columnH.Name = "Высота";
+
+            dataGridView.Columns.Add(columnBal);
+            dataGridView.Columns.Add(columnType);
+            dataGridView.Columns.Add(columnDim);
+            dataGridView.Columns.Add(columnLenth);
+            dataGridView.Columns.Add(columnW);
+            dataGridView.Columns.Add(columnH);
+
+            var bindingList = new BindingList<Balance>(dt.dataList);
+            var source = new BindingSource(bindingList, null);
+
+            dataGridView.Columns[0].DataPropertyName = "BalanceId";
+            dataGridView.Columns[1].DataPropertyName = "Type";
+            dataGridView.Columns[2].DataPropertyName = "Dim";
+            dataGridView.Columns[3].DataPropertyName = "Length";
+            dataGridView.Columns[4].DataPropertyName = "W";
+            dataGridView.Columns[5].DataPropertyName = "H";
+            dataGridView.DataSource = source;
 
 
-
-           // dataGridView.DataSource = dt.data;
             //Balance currentObject = (Balance)dataGridView.CurrentRow.DataBoundItem;
 
             //MessageBox.Show(currentObject.BalanceID.ToString());
 
             //return;
-
-
         }
-
     }
 }

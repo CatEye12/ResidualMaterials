@@ -26,7 +26,7 @@ namespace ResidualMaterials
 
         public DataTable dataTablePl = new DataTable();
         public DataTable dataTableR = new DataTable();
-        public List<Balance> data;
+        public List<Balance> dataList;
 
         int LastBalanceId;
         Balance itemToCutFrom;
@@ -35,43 +35,43 @@ namespace ResidualMaterials
         public static bool isFieldsFilled;
 
 
-        public static double widthDim { get; set; }
-        public static double length { get; set; }
-        public static double height { get; set; }
-        public static double lengthWP { get; set; }
-        public static double widthWP { get; set; }
+        public static decimal widthDim { get; set; }
+        public static decimal length { get; set; }
+        public static decimal height { get; set; }
+        public static decimal lengthWP { get; set; }
+        public static decimal widthWP { get; set; }
 
         
         public List<Balance> MakingDataList(bool type)
         {
             if (type == false)
             {
-                var list = (from DataRow row in dataTableR.Rows where row["Type"].Equals(false)
+                var list = (from DataRow row in dataTableR.Rows where row["Type"].Equals(type)
                
                             select new Balance
                             {
                                 BalanceID = (int)row["BalanceID"],
                                 Type = (bool)row["Type"],
-                                Dim = (int)row["Dim"],
-                                Length = (int)row["Lenth"]
+                                Dim = (decimal)row["Dim"],
+                                Length = (decimal)row["Lenth"]
                             }).ToList();
                 return list;
             }
             else
             {
-                var list = (from DataRow row in dataTablePl.Rows where row["Type"].Equals(true)
+                var list = (from DataRow row in dataTablePl.Rows where row["Type"].Equals(type)
                             select new Balance
                             {
                                 BalanceID = (int)row["BalanceID"],
                                 Type = (bool)row["Type"],
-                                Length = (int)row["Lenth"],
-                                W = (int)row["W"],
-                                H = (int)row["H"]
+                                Length = (decimal)row["Lenth"],
+                                W = (decimal)row["W"],
+                                H = (decimal)row["H"]
                             }).ToList();
                 return list;
             }
         }
-        private List<Balance> ConvertInputDataToList(double l, double w, double h)
+        private List<Balance> ConvertInputDataToList(decimal l, decimal w, decimal h)
         {
             var list = new List<Balance>() { new Balance
             {
@@ -84,7 +84,7 @@ namespace ResidualMaterials
             return list;
         }
 
-        private List<Balance> ConvertInputDataToList(double l, double dim)
+        private List<Balance> ConvertInputDataToList(decimal l, decimal dim)
         {
             var list = new List<Balance>() { new Balance
             {
@@ -101,9 +101,9 @@ namespace ResidualMaterials
         {
             if (isFieldsFilled == true)
             {
-                double l = length;
-                double w = widthDim;
-                double h = height;
+                decimal l = length;
+                decimal w = widthDim;
+                decimal h = height;
 
                 if (LastBalanceId == 0)
                 {
@@ -143,17 +143,34 @@ namespace ResidualMaterials
         {
             objCon = new SqlConnection(connection);
             objCon.Open();
-            
-            adapterR = new SqlDataAdapter("SELECT * FROM Balance WHERE Type = 'false'", connection);
-            adapterPlane = new SqlDataAdapter("SELECT * FROM Balance WHERE Type = 'true'", connection);
 
-            adapterR.Fill(dataSet, "Тело вращения");
-            adapterPlane.Fill(dataSet, "Плоское");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            SqlCommand cmd = new SqlCommand("SELECT * FROM Balance " + type, objCon);
 
-            dataTableR = dataSet.Tables["Тело вращения"];
-            dataTablePl = dataSet.Tables["Плоское"];
+            //adapterR = new SqlDataAdapter("SELECT * FROM Balance WHERE Type = "+ type, connection);
 
-            data = MakingDataList(residualType);
+            dataList = MakingDataList(residualType);
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    dataList.Add(new Balance()
+                    {
+                        BalanceID = (int)reader["BalanceId"], 
+                        Type = (bool)reader["Type"],
+                        Dim = (decimal)reader["Dim"],
+                        Length = (decimal)reader["Lenth"],
+                        W = (decimal)reader["W"],
+                        H = (decimal)reader["H"]
+                    }); //Specify column index 
+                }
+            }
+
+            //adapterR.Fill(dataSet, "Тело вращения");
+            //adapterPlane.Fill(dataSet, "Плоское");
+
+            //dataTableR = dataSet.Tables["Тело вращения"];
+            //dataTablePl = dataSet.Tables["Плоское"];
 
             objCon.Close();
         }
@@ -178,7 +195,7 @@ namespace ResidualMaterials
         {
             int balID = dgv.SelectedCells[0].RowIndex;
 
-            return data[balID];
+            return dataList[balID];
             
             /* EnumerableRowCollection<DataRow> query = from order in oTable.AsEnumerable()
                                                      where order.Field<SqlHierarchyId>("HierarchyId").GetAncestor(1).Equals(iID)
@@ -187,168 +204,168 @@ namespace ResidualMaterials
         
         private bool CheckingWorkpieceLessThanResidual(DataGridView dgv)
         {
-            double l = lengthWP;
-            double w = widthWP;
-            if (isFieldsFilled == true)
-            {
-                data = MakingDataList(residualType);
-                itemToCutFrom = GetItemToCut(dgv);
-                #region если поля заполнены
-                if (residualType == true)
-                {
-                    double temp;
+            //double l = lengthWP;
+            //double w = widthWP;
+            //if (isFieldsFilled == true)
+            //{
+            //    dataList = MakingDataList(residualType);
+            //    itemToCutFrom = GetItemToCut(dgv);
+            //    #region если поля заполнены
+            //    if (residualType == true)
+            //    {
+            //        double temp;
                     
-                    //определяем большую сторону заготовки
-                    if (l >= w) { }
-                    else
-                    {
-                        temp = l;
-                        l = w;
-                        w = temp;
-                    }
+            //        //определяем большую сторону заготовки
+            //        if (l >= w) { }
+            //        else
+            //        {
+            //            temp = l;
+            //            l = w;
+            //            w = temp;
+            //        }
 
-                    if (itemToCutFrom.Length >= l)
-                    {
-                        if (itemToCutFrom.W >= w)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            if (itemToCutFrom.Length >= w)
-                            {
-                                if (itemToCutFrom.W >= l)
+            //        if (itemToCutFrom.Length >= l)
+            //        {
+            //            if (itemToCutFrom.W >= w)
+            //            {
+            //                return true;
+            //            }
+            //            else
+            //            {
+            //                if (itemToCutFrom.Length >= w)
+            //                {
+            //                    if (itemToCutFrom.W >= l)
 
-                                { return true; }
+            //                    { return true; }
 
-                            }
-                            else
-                                return false;
-                        }
+            //                }
+            //                else
+            //                    return false;
+            //            }
 
-                        return false;
-                    }
-                    else
-                    {
-                        if (itemToCutFrom.W >= l)
-                        {
-                            if (itemToCutFrom.Length >= w)
+            //            return false;
+            //        }
+            //        else
+            //        {
+            //            if (itemToCutFrom.W >= l)
+            //            {
+            //                if (itemToCutFrom.Length >= w)
 
-                            { return true; }
+            //                { return true; }
 
-                            else return false;
-                        }
-                        return false;
-                    }
-                }
+            //                else return false;
+            //            }
+            //            return false;
+            //        }
+            //    }
                 
-                else
-                {
-                    l = lengthWP;
-                    if (itemToCutFrom.Length >= l) return true;
-                    else return false;
-                }
-                #endregion
-            }
-            else
-            {
-                MessageBox.Show("Выберите остаток и заполните параметры заготовки!");
+            //    else
+            //    {
+            //        l = lengthWP;
+            //        if (itemToCutFrom.Length >= l) return true;
+            //        else return false;
+            //    }
+            //    #endregion
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Выберите остаток и заполните параметры заготовки!");
                 return false;
-            }
+            //}
         }
         
         public void CutOut(DataGridView dgv, bool type)
         {
-            double length_ = lengthWP;
-            double width_ = widthWP;
-            double temp;
+            //double length_ = lengthWP;
+            //double width_ = widthWP;
+            //double temp;
 
-            bool possOrNot = CheckingWorkpieceLessThanResidual(dgv);
+            //bool possOrNot = CheckingWorkpieceLessThanResidual(dgv);
             
-            if (possOrNot == true)
-            {
-                double new_Length = 0;
-                int rowNumber = RowToInsert();
+            //if (possOrNot == true)
+            //{
+            //    double new_Length = 0;
+            //    int rowNumber = RowToInsert();
 
-                if (type == false)
+            //    if (type == false)
 
-                {
-                    new_Length = itemToCutFrom.Length - length_;
+            //    {
+            //        new_Length = itemToCutFrom.Length - length_;
 
-                    MessageBox.Show(new_Length.ToString());
-                    dataTableR.Rows[rowNumber].SetField(dataTableR.Columns["Lenth"], new_Length);
+            //        MessageBox.Show(new_Length.ToString());
+            //        dataTableR.Rows[rowNumber].SetField(dataTableR.Columns["Lenth"], new_Length);
 
-                    builder = new SqlCommandBuilder(adapterR);
-                }
-                else
-                {
-                    double new_Width = 0;
-                L1:
-                    if (itemToCutFrom.Length > length_)
-                    {
-                        if (itemToCutFrom.W > width_)
-                        {/////////////
-                            new_Length = itemToCutFrom.Length - length_;
-                            new_Width = itemToCutFrom.W - width_;
-                        }
-                        else if (itemToCutFrom.W == width_)
-                        {
-                            new_Length = itemToCutFrom.Length - length_;
-                            new_Width = itemToCutFrom.W;
-                        }
-                        else if (itemToCutFrom.W < width_)
-                        {/////////////
-                            new_Width = itemToCutFrom.W - length_;
-                            new_Length = itemToCutFrom.Length - width_;
-                        }
-                    }
+            //        builder = new SqlCommandBuilder(adapterR);
+            //    }
+            //    else
+            //    {
+            //        double new_Width = 0;
+            //    L1:
+            //        if (itemToCutFrom.Length > length_)
+            //        {
+            //            if (itemToCutFrom.W > width_)
+            //            {/////////////
+            //                new_Length = itemToCutFrom.Length - length_;
+            //                new_Width = itemToCutFrom.W - width_;
+            //            }
+            //            else if (itemToCutFrom.W == width_)
+            //            {
+            //                new_Length = itemToCutFrom.Length - length_;
+            //                new_Width = itemToCutFrom.W;
+            //            }
+            //            else if (itemToCutFrom.W < width_)
+            //            {/////////////
+            //                new_Width = itemToCutFrom.W - length_;
+            //                new_Length = itemToCutFrom.Length - width_;
+            //            }
+            //        }
 
-                    else if (itemToCutFrom.Length == length_)
-                    {
-                        if (itemToCutFrom.W > width_)
-                        {
-                            new_Length = itemToCutFrom.Length;
-                            new_Width = itemToCutFrom.W - width_;
-                        }
+            //        else if (itemToCutFrom.Length == length_)
+            //        {
+            //            if (itemToCutFrom.W > width_)
+            //            {
+            //                new_Length = itemToCutFrom.Length;
+            //                new_Width = itemToCutFrom.W - width_;
+            //            }
 
-                        else if (itemToCutFrom.W == width_)
-                        {
-                            new_Length = 0;
-                            new_Width = 0;
+            //            else if (itemToCutFrom.W == width_)
+            //            {
+            //                new_Length = 0;
+            //                new_Width = 0;
 
-                            //нужно удалять остаток
-                        }
-                    }
+            //                //нужно удалять остаток
+            //            }
+            //        }
 
-                    else if (itemToCutFrom.Length < length_)
-                    {
-                        temp = length_;
-                        length_ = width_;
-                        width_ = temp;
-                        goto L1;
-                    }
-                    //меняем значения длинны/ширины обратно
-                    temp = length_;
-                    length_ = width_;
-                    width_ = temp;
+            //        else if (itemToCutFrom.Length < length_)
+            //        {
+            //            temp = length_;
+            //            length_ = width_;
+            //            width_ = temp;
+            //            goto L1;
+            //        }
+            //        //меняем значения длинны/ширины обратно
+            //        temp = length_;
+            //        length_ = width_;
+            //        width_ = temp;
 
-                    MessageBox.Show("new_Length  " + new_Length.ToString());
-                    MessageBox.Show("new_Width  " + new_Width.ToString());
+            //        MessageBox.Show("new_Length  " + new_Length.ToString());
+            //        MessageBox.Show("new_Width  " + new_Width.ToString());
 
-                    dataTablePl.Rows[rowNumber].SetField(dataTablePl.Columns["Lenth"], new_Length);
-                    dataTablePl.Rows[rowNumber].SetField(dataTablePl.Columns["W"], new_Width);
+            //        dataTablePl.Rows[rowNumber].SetField(dataTablePl.Columns["Lenth"], new_Length);
+            //        dataTablePl.Rows[rowNumber].SetField(dataTablePl.Columns["W"], new_Width);
 
-                    builder = new SqlCommandBuilder(adapterPlane);
+            //        builder = new SqlCommandBuilder(adapterPlane);
 
-                }
-                adapterR.Update(dataTableR);
-                adapterPlane.Update(dataTablePl);
-                MessageBox.Show("Заготовка вырезана!)");
+            //    }
+            //    adapterR.Update(dataTableR);
+            //    adapterPlane.Update(dataTablePl);
+            //    MessageBox.Show("Заготовка вырезана!)");
 
-            }
-            else { MessageBox.Show("Невозможно вырезать заготовку. Параметры заготовки больше параметров остатка!"); }
+            //}
+            //else { MessageBox.Show("Невозможно вырезать заготовку. Параметры заготовки больше параметров остатка!"); }
 
-            dgv.DataSource = FillDgv();
+            //dgv.DataSource = FillDgv();
         }
         private int RowToInsert()
         {
