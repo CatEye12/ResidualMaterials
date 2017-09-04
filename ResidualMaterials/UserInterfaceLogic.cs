@@ -47,11 +47,11 @@ namespace ResidualMaterials
                 else MyDtTable.isFieldsFilled = false;
             }
         }
-        public void CheckIfFieldsAreFilled(TextBox width, TextBox length, TextBox height)//for insertion
+        public void CheckIfFieldsAreFilled(TextBox name, TextBox width, TextBox length, TextBox height)//for insertion
         {
             if (MyDtTable.residualType == true)
             {
-                if (!string.IsNullOrEmpty(width.Text) && !string.IsNullOrEmpty(length.Text) && !string.IsNullOrEmpty(height.Text))
+                if (!string.IsNullOrEmpty(name.Text) && !string.IsNullOrEmpty(width.Text) && !string.IsNullOrEmpty(length.Text) && !string.IsNullOrEmpty(height.Text))
 
                 { MyDtTable.isFieldsFilled = true; }
                 else MyDtTable.isFieldsFilled = false;
@@ -65,7 +65,7 @@ namespace ResidualMaterials
             }
         }
 
-        public void ConvTextToDouble(TextBox w, TextBox l, TextBox h)//for input
+        public void ConvTextToDecimal(TextBox name, TextBox w, TextBox l, TextBox h)//for input
         {
             if (MyDtTable.isFieldsFilled == true)
 
@@ -81,10 +81,11 @@ namespace ResidualMaterials
                     MyDtTable.length = Convert.ToDecimal(l.Text);
                     MyDtTable.height = Convert.ToDecimal(h.Text);
                 }
+                MyDtTable.name = Convert.ToInt32(name.Text);
             }
             else MessageBox.Show("Заполнены не все параметры остатка!");
         }
-        public void ConvTxtToDouble(TextBox w, TextBox l)//for cut
+        public void ConvTxtToDecimal(TextBox w, TextBox l)//for cut
         {
             if (MyDtTable.isFieldsFilled == true)
 
@@ -105,6 +106,15 @@ namespace ResidualMaterials
         public void CheckType(ComboBox bx)
         {
             if (bx.SelectedIndex == 0) { MyDtTable.residualType = false; } else MyDtTable.residualType = true;
+        }
+
+        public Balance GetSelectedBalance(DataGridView dgv)
+        {
+            Balance currentObject = (Balance)dgv.CurrentRow.DataBoundItem;
+
+            //MessageBox.Show(currentObject.BalanceID.ToString());
+
+            return currentObject;
         }
     }
 }

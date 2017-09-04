@@ -15,40 +15,37 @@ namespace ResidualMaterials
             comboBox1.SelectedIndex = 0;
             dt.Load_Data(MyDtTable.residualType);
 
-            b = new Balance();
-
-            //dataGridView.DataSource = dt.data;///dt.FillDgv();
+            SuperPuper();
         }
 
         MyDtTable dt;
-        Balance b; 
         UserInterface usInter;
         
+
         private void Create_Click(object sender, EventArgs e)
-        {
-            SuperPuper();
-            return;
-            usInter.CheckIfFieldsAreFilled(txtWidthDim, txtLength, txtH);
-            usInter.ConvTextToDouble(txtWidthDim, txtLength, txtH);
+        {        
+            usInter.CheckIfFieldsAreFilled(txtName, txtWidthDim, txtLength, txtH);
+            usInter.ConvTextToDecimal(txtName, txtWidthDim, txtLength, txtH);
             dt.PushingDataInTable();
 
-            dataGridView.DataSource = dt.FillDgv();
+            SuperPuper();            
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             usInter.CheckType(comboBox1);
             usInter.ManagingUserInterface(lblWidthWP, lblH, lblWidthDim, txtWidthWP, txtH);
-
-            //dataGridView.DataSource = dt.FillDgv();
+            
+            SuperPuper();
         }
         
         private void CutOut_Click(object sender, EventArgs e)
         {
             usInter.CheckIfFieldsAreFilled(dataGridView, txtWidthWP, txtLengthWP);
-            usInter.ConvTxtToDouble(txtWidthWP, txtLengthWP);
+            usInter.ConvTxtToDecimal(txtWidthWP, txtLengthWP);
 
-            dt.CutOut(dataGridView, MyDtTable.residualType);
+            dt.CutOut();
+            SuperPuper();
         }
 
         private static void AllowUserInputOnlyNumbers(object sender, KeyPressEventArgs e)
@@ -94,47 +91,109 @@ namespace ResidualMaterials
 
         private void SuperPuper()
         {
+            dt.dataListToView = dt.MakingDataList();
+
+            dataGridView.Columns.Clear();
+
             dataGridView.AutoGenerateColumns = false;
             dataGridView.AutoSize = true;
-          
-            DataGridViewTextBoxColumn columnBal = new DataGridViewTextBoxColumn();
-            DataGridViewTextBoxColumn columnType = new DataGridViewTextBoxColumn();
-            DataGridViewTextBoxColumn columnDim = new DataGridViewTextBoxColumn();
-            DataGridViewTextBoxColumn columnLenth = new DataGridViewTextBoxColumn();
-            DataGridViewTextBoxColumn columnW = new DataGridViewTextBoxColumn();
-            DataGridViewTextBoxColumn columnH = new DataGridViewTextBoxColumn();
+            string [] columnName = null;
+            
+            if (MyDtTable.residualType == false)
+            {
+                columnName = new string[] { "Баланс", "Наименование", "Тип", "Диаметр", "Длина", "Версия" };
+            }
+            else { columnName = new string[] { "Баланс", "Наименование", "Тип", "Длина", "Ширина", "Высота", "Версия" }; }
 
-            columnBal.Name = "Баланс";
-            columnType.Name = "Тип";
-            columnDim.Name = "Диаметр";
-            columnLenth.Name = "Длина";
-            columnW.Name = "Ширина";
-            columnH.Name = "Высота";
 
-            dataGridView.Columns.Add(columnBal);
-            dataGridView.Columns.Add(columnType);
-            dataGridView.Columns.Add(columnDim);
-            dataGridView.Columns.Add(columnLenth);
-            dataGridView.Columns.Add(columnW);
-            dataGridView.Columns.Add(columnH);
 
-            var bindingList = new BindingList<Balance>(dt.dataList);
+            DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
+            for (int cnt = 0; cnt < columnName.Length; cnt++)
+            {
+                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
+                col.Name = columnName[cnt];
+                column_array[cnt] = col;
+            }
+            dataGridView.Columns.AddRange(column_array);
+
+
+            var bindingList = new BindingList<Balance>(dt.dataListToView);
             var source = new BindingSource(bindingList, null);
 
-            dataGridView.Columns[0].DataPropertyName = "BalanceId";
-            dataGridView.Columns[1].DataPropertyName = "Type";
-            dataGridView.Columns[2].DataPropertyName = "Dim";
-            dataGridView.Columns[3].DataPropertyName = "Length";
-            dataGridView.Columns[4].DataPropertyName = "W";
-            dataGridView.Columns[5].DataPropertyName = "H";
+            dataGridView.Columns["Баланс"].DataPropertyName = "BalanceId";
+            dataGridView.Columns["Тип"].DataPropertyName = "Type";
+            dataGridView.Columns["Наименование"].DataPropertyName = "Name";
+            dataGridView.Columns["Версия"].DataPropertyName = "Version";
+            if (MyDtTable.residualType == false)
+            {
+                dataGridView.Columns["Диаметр"].DataPropertyName = "Dim";
+                dataGridView.Columns["Длина"].DataPropertyName = "Length";
+            }
+            else
+            {
+                dataGridView.Columns["Длина"].DataPropertyName = "Length";
+                dataGridView.Columns["Ширина"].DataPropertyName = "W";
+                dataGridView.Columns["Высота"].DataPropertyName = "H";
+            }
             dataGridView.DataSource = source;
+        }
+
+        public void SuperPuper2()
+        {
+            dt.dataListToView = dt.GetItemsofTheSameVersion();
+            dataGridView2.Columns.Clear();
+
+            dataGridView2.AutoGenerateColumns = false;
+            dataGridView2.AutoSize = true;
+            string[] columnName = null;
+
+            
+            if (MyDtTable.residualType == false)
+            {
+                columnName = new string[] { "Наименование", "Диаметр", "Длина", "Версия" };
+            }
+            else { columnName = new string[] { "Наименование", "Длина", "Ширина", "Высота", "Версия" }; }
 
 
-            //Balance currentObject = (Balance)dataGridView.CurrentRow.DataBoundItem;
 
-            //MessageBox.Show(currentObject.BalanceID.ToString());
+            DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
+            for (int cnt = 0; cnt < columnName.Length; cnt++)
+            {
+                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
+                col.Name = columnName[cnt];
+                column_array[cnt] = col;
+            }
+            dataGridView2.Columns.AddRange(column_array);
 
-            //return;
+
+
+            var bindingList = new BindingList<Balance>(dt.dataListToView);
+            var source = new BindingSource(bindingList, null);
+            dataGridView2.Columns["Наименование"].DataPropertyName = "Name";
+            dataGridView2.Columns["Версия"].DataPropertyName = "Version";
+            if (MyDtTable.residualType == false)
+            {
+                dataGridView2.Columns["Диаметр"].DataPropertyName = "Dim";
+                dataGridView2.Columns["Длина"].DataPropertyName = "Length";
+            }
+            else
+            {
+                dataGridView2.Columns["Длина"].DataPropertyName = "Length";
+                dataGridView2.Columns["Ширина"].DataPropertyName = "W";
+                dataGridView2.Columns["Высота"].DataPropertyName = "H";
+            }
+
+            dataGridView2.DataSource = source;
+        }
+
+        private void dataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            usInter.CheckType(comboBox1);
+            MyDtTable.itemToCutFrom = usInter.GetSelectedBalance(dataGridView);
+
+            //show 2 dataGridView
+            SuperPuper2();
+
         }
     }
 }

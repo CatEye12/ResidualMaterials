@@ -8,5 +8,7 @@
         public decimal Length { get; set; }
         public decimal W { get; set; }
         public decimal H { get; set; }
+        public int Name { get; set; }
+        public int Version { get; set; }
     }
 }

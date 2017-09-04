@@ -50,6 +50,8 @@
             this.CreateButton = new System.Windows.Forms.Button();
             this.cutOutBtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblName = new System.Windows.Forms.Label();
+            this.txtName = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -62,10 +64,12 @@
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.txtWidthDim);
             this.groupBox1.Controls.Add(this.lblWidthDimWP);
+            this.groupBox1.Controls.Add(this.txtName);
             this.groupBox1.Controls.Add(this.txtH);
             this.groupBox1.Controls.Add(this.txtLengthWP);
             this.groupBox1.Controls.Add(this.txtLength);
             this.groupBox1.Controls.Add(this.lblWidthDim);
+            this.groupBox1.Controls.Add(this.lblName);
             this.groupBox1.Controls.Add(this.lblH);
             this.groupBox1.Controls.Add(this.lblLength);
             this.groupBox1.Controls.Add(this.txtWidthWP);
@@ -92,7 +96,7 @@
             // 
             // txtWidthDim
             // 
-            this.txtWidthDim.Location = new System.Drawing.Point(141, 83);
+            this.txtWidthDim.Location = new System.Drawing.Point(141, 117);
             this.txtWidthDim.Name = "txtWidthDim";
             this.txtWidthDim.Size = new System.Drawing.Size(100, 20);
             this.txtWidthDim.TabIndex = 21;
@@ -109,7 +113,7 @@
             // 
             // txtH
             // 
-            this.txtH.Location = new System.Drawing.Point(141, 147);
+            this.txtH.Location = new System.Drawing.Point(141, 181);
             this.txtH.Name = "txtH";
             this.txtH.Size = new System.Drawing.Size(100, 20);
             this.txtH.TabIndex = 19;
@@ -125,7 +129,7 @@
             // 
             // txtLength
             // 
-            this.txtLength.Location = new System.Drawing.Point(141, 117);
+            this.txtLength.Location = new System.Drawing.Point(141, 151);
             this.txtLength.Name = "txtLength";
             this.txtLength.Size = new System.Drawing.Size(100, 20);
             this.txtLength.TabIndex = 20;
@@ -134,7 +138,7 @@
             // lblWidthDim
             // 
             this.lblWidthDim.AutoSize = true;
-            this.lblWidthDim.Location = new System.Drawing.Point(6, 90);
+            this.lblWidthDim.Location = new System.Drawing.Point(6, 124);
             this.lblWidthDim.Name = "lblWidthDim";
             this.lblWidthDim.Size = new System.Drawing.Size(121, 13);
             this.lblWidthDim.TabIndex = 13;
@@ -143,7 +147,7 @@
             // lblH
             // 
             this.lblH.AutoSize = true;
-            this.lblH.Location = new System.Drawing.Point(6, 150);
+            this.lblH.Location = new System.Drawing.Point(6, 188);
             this.lblH.Name = "lblH";
             this.lblH.Size = new System.Drawing.Size(128, 13);
             this.lblH.TabIndex = 12;
@@ -152,7 +156,7 @@
             // lblLength
             // 
             this.lblLength.AutoSize = true;
-            this.lblLength.Location = new System.Drawing.Point(6, 120);
+            this.lblLength.Location = new System.Drawing.Point(6, 158);
             this.lblLength.Name = "lblLength";
             this.lblLength.Size = new System.Drawing.Size(115, 13);
             this.lblLength.TabIndex = 14;
@@ -232,6 +236,7 @@
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(584, 342);
             this.dataGridView.TabIndex = 0;
+            this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
             // groupBox3
             // 
@@ -283,6 +288,23 @@
             this.panel1.Size = new System.Drawing.Size(163, 141);
             this.panel1.TabIndex = 7;
             // 
+            // lblName
+            // 
+            this.lblName.AutoSize = true;
+            this.lblName.Location = new System.Drawing.Point(6, 90);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(83, 13);
+            this.lblName.TabIndex = 12;
+            this.lblName.Text = "Наименование";
+            // 
+            // txtName
+            // 
+            this.txtName.Location = new System.Drawing.Point(141, 83);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(100, 20);
+            this.txtName.TabIndex = 19;
+            this.txtName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtH_KeyPress);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -330,6 +352,8 @@
         private System.Windows.Forms.Label lblWidthDimWP;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.Label lblName;
     }
 }
 

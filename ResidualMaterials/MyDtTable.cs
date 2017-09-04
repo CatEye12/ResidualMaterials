@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
 
 namespace ResidualMaterials
 {
@@ -15,21 +11,19 @@ namespace ResidualMaterials
         string connection = "Data Source=pdmsrv;Initial Catalog=TaskDataBase;Persist Security Info=True;User ID=airventscad;Password=1";
         public MyDtTable()
         {
-
+            dataList = new List<Balance>();
         }
         
         SqlConnection objCon;
-        SqlCommandBuilder builder;
-        DataSet dataSet = new DataSet();
-        SqlDataAdapter adapterR;
-        SqlDataAdapter adapterPlane;
-
-        public DataTable dataTablePl = new DataTable();
-        public DataTable dataTableR = new DataTable();
+        
         public List<Balance> dataList;
+        public List<Balance> dataListToView;
+        
 
         int LastBalanceId;
-        Balance itemToCutFrom;
+        int lastVersion;
+
+        public static Balance itemToCutFrom;
         List<Balance> inputMaterial;
         public static bool residualType;
         public static bool isFieldsFilled;
@@ -40,141 +34,104 @@ namespace ResidualMaterials
         public static decimal height { get; set; }
         public static decimal lengthWP { get; set; }
         public static decimal widthWP { get; set; }
+        public static int name { get; set; }
+        public static int version { get; set; }
 
-        
-        public List<Balance> MakingDataList(bool type)
-        {
-            if (type == false)
-            {
-                var list = (from DataRow row in dataTableR.Rows where row["Type"].Equals(type)
-               
-                            select new Balance
+
+
+        public void Load_Data(bool type)
+                {
+                    objCon = new SqlConnection(connection);
+                    objCon.Open();
+            
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Balance " + type, objCon);
+                        
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            dataList.Add(new Balance()
                             {
-                                BalanceID = (int)row["BalanceID"],
-                                Type = (bool)row["Type"],
-                                Dim = (decimal)row["Dim"],
-                                Length = (decimal)row["Lenth"]
-                            }).ToList();
-                return list;
-            }
-            else
-            {
-                var list = (from DataRow row in dataTablePl.Rows where row["Type"].Equals(type)
-                            select new Balance
-                            {
-                                BalanceID = (int)row["BalanceID"],
-                                Type = (bool)row["Type"],
-                                Length = (decimal)row["Lenth"],
-                                W = (decimal)row["W"],
-                                H = (decimal)row["H"]
-                            }).ToList();
-                return list;
-            }
-        }
-        private List<Balance> ConvertInputDataToList(decimal l, decimal w, decimal h)
+                                BalanceID = (int)reader["BalanceId"], 
+                                Type = (bool)reader["Type"],
+                                Dim = (decimal)reader["Dim"],
+                                Length = (decimal)reader["Lenth"],
+                                W = (decimal)reader["W"],
+                                H = (decimal)reader["H"],
+                                Name = (int)reader["Name"],
+                                Version = (int)reader["Version"]
+                            }); //Specify column index 
+                        }
+                    }
+                    objCon.Close();
+                }
+        public List<Balance> MakingDataList()
         {
-            var list = new List<Balance>() { new Balance
-            {
-                Type = true,
-                Length = l,
-                W = w,
-                H = h
-            } };
-
-            return list;
+            var list = from item in dataList where item.Type.Equals(residualType)               
+                        select new Balance
+                        {
+                            BalanceID = item.BalanceID,
+                            Type = item.Type,
+                            Dim = item.Dim,
+                            Length = item.Length, 
+                            W = item.W,
+                            H = item.H,
+                            Name = item.Name,
+                            Version = item.Version
+                        };
+            return list.ToList();            
         }
-
-        private List<Balance> ConvertInputDataToList(decimal l, decimal dim)
-        {
-            var list = new List<Balance>() { new Balance
-            {
-                Type = false,
-
-                Length = l,
-                Dim = dim
-            } };
-
-            return list;           
-        }
+       
 
         public void PushingDataInTable()
         {
             if (isFieldsFilled == true)
             {
-                decimal l = length;
-                decimal w = widthDim;
-                decimal h = height;
-
+               
                 if (LastBalanceId == 0)
                 {
                     LastBalanceId = LastRowBalanceId();
                 }
                 else { LastBalanceId++; }
 
-
                 if (residualType == true)
                 {
-                    inputMaterial = ConvertInputDataToList(l, w, h); MessageBox.Show("Ploskoe");
-
-                    foreach (var item in inputMaterial)
-                    {
-                        dataTablePl.Rows.Add(LastBalanceId, item.Type, item.Dim, item.Length, item.W, item.H); //добавление материала в таблицу
-                    }
-                    //saving changes
-                    builder = new SqlCommandBuilder(adapterPlane);
-                    adapterPlane.Update(dataTablePl);
+                    inputMaterial = ConvertInputDataToList(name, length, widthDim, height); MessageBox.Show("Ploskoe");
                 }
                 else
                 {
-                    inputMaterial = ConvertInputDataToList(l, w); MessageBox.Show("Telo vrascheniya");
-
-                    foreach (var item in inputMaterial)
-                    {
-                        dataTableR.Rows.Add(LastBalanceId, item.Type, item.Dim, item.Length, item.W, item.H);
-                    }
-                    //saving changes
-                    builder = new SqlCommandBuilder(adapterR);
-                    adapterR.Update(dataTableR);
+                    inputMaterial = ConvertInputDataToList(name, length, widthDim); MessageBox.Show("Telo vrascheniya");
                 }
+                
+                SaveNewMaterialDb(inputMaterial[0].Name, inputMaterial[0].Type, inputMaterial[0].Dim, inputMaterial[0].Length, inputMaterial[0].W, inputMaterial[0].H, 0);                
             }
         }
-        
-        public void Load_Data(bool type)
-        {
-            objCon = new SqlConnection(connection);
-            objCon.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            SqlCommand cmd = new SqlCommand("SELECT * FROM Balance " + type, objCon);
-
-            //adapterR = new SqlDataAdapter("SELECT * FROM Balance WHERE Type = "+ type, connection);
-
-            dataList = MakingDataList(residualType);
-            using (SqlDataReader reader = cmd.ExecuteReader())
-            {
-                while (reader.Read())
+        private List<Balance> ConvertInputDataToList(int n, decimal l, decimal w, decimal h)
                 {
-                    dataList.Add(new Balance()
-                    {
-                        BalanceID = (int)reader["BalanceId"], 
-                        Type = (bool)reader["Type"],
-                        Dim = (decimal)reader["Dim"],
-                        Length = (decimal)reader["Lenth"],
-                        W = (decimal)reader["W"],
-                        H = (decimal)reader["H"]
-                    }); //Specify column index 
+                    var list = new List<Balance>() { new Balance
+                    { 
+                        Name = n,
+                        Type = true,
+                        Length = l,
+                        W = w,
+                        H = h
+                    } };
+
+                    return list;
                 }
-            }
+        private List<Balance> ConvertInputDataToList(int n, decimal l, decimal dim)
+        {
+            var list = new List<Balance>() { new Balance
+            {
+                Name = n,
+                Type = false,
+                Length = l,
+                Dim = dim
+            } };
 
-            //adapterR.Fill(dataSet, "Тело вращения");
-            //adapterPlane.Fill(dataSet, "Плоское");
-
-            //dataTableR = dataSet.Tables["Тело вращения"];
-            //dataTablePl = dataSet.Tables["Плоское"];
-
-            objCon.Close();
+            return list;           
         }
-        
         private int LastRowBalanceId()
         {
             int maxBalanceID;
@@ -190,235 +147,240 @@ namespace ResidualMaterials
             objCon.Close();
             return maxBalanceID + 1;
         }
-        
-        private Balance GetItemToCut(DataGridView dgv)
+        public void SaveNewMaterialDb(int name, bool type, decimal dim, decimal length, decimal w, decimal h, int version)
         {
-            int balID = dgv.SelectedCells[0].RowIndex;
+            objCon.Open();
+            SqlCommand save = new SqlCommand("AddMaretial");
+            SqlDataReader reader;
+            save.CommandType = CommandType.StoredProcedure;
+            save.Connection = objCon;
 
-            return dataList[balID];
+            save.Parameters.AddWithValue("@name", name);
+            save.Parameters.AddWithValue("@type", type);
+            save.Parameters.AddWithValue("@dim", dim);
+            save.Parameters.AddWithValue("@length", length);
+            save.Parameters.AddWithValue("@w", w);
+            save.Parameters.AddWithValue("@h", h);
+            save.Parameters.AddWithValue("@version", version);
+            reader = save.ExecuteReader();
             
-            /* EnumerableRowCollection<DataRow> query = from order in oTable.AsEnumerable()
-                                                     where order.Field<SqlHierarchyId>("HierarchyId").GetAncestor(1).Equals(iID)
-                                                     select order;*/
+            objCon.Close();
+
+            dataList.Add(new Balance {BalanceID = LastBalanceId, Version = 0, Type = type, Dim = dim, Length = length, W = w, H = h, Name = name});
+            
         }
-        
-        private bool CheckingWorkpieceLessThanResidual(DataGridView dgv)
+
+
+               
+        public void CutOut()
         {
-            //double l = lengthWP;
-            //double w = widthWP;
-            //if (isFieldsFilled == true)
-            //{
-            //    dataList = MakingDataList(residualType);
-            //    itemToCutFrom = GetItemToCut(dgv);
-            //    #region если поля заполнены
-            //    if (residualType == true)
-            //    {
-            //        double temp;
+            decimal temp;
+
+            bool possOrNot = CheckingWorkpieceLessThanResidual();
+            
+            if (possOrNot == true)
+            {
+                decimal new_Length = 0;
+                decimal new_Width = 0;
+                lastVersion = LastVersion(itemToCutFrom.BalanceID);
+
+                if (residualType == false)
+
+                {
+                    new_Length = itemToCutFrom.Length - lengthWP;
+
+                    MessageBox.Show(new_Length.ToString());
+                }
+                else
+                {
                     
-            //        //определяем большую сторону заготовки
-            //        if (l >= w) { }
-            //        else
-            //        {
-            //            temp = l;
-            //            l = w;
-            //            w = temp;
-            //        }
+                L1:
+                    if (itemToCutFrom.Length > lengthWP)
+                    {
+                        if (itemToCutFrom.W > widthWP)
+                        {/////////////
+                            new_Length = itemToCutFrom.Length - lengthWP;
+                            new_Width = itemToCutFrom.W - widthWP;
+                        }
+                        else if (itemToCutFrom.W == widthWP)
+                        {
+                            new_Length = itemToCutFrom.Length - lengthWP;
+                            new_Width = itemToCutFrom.W;
+                        }
+                        else if (itemToCutFrom.W < widthWP)
+                        {/////////////
+                            new_Width = itemToCutFrom.W - lengthWP;
+                            new_Length = itemToCutFrom.Length - widthWP;
+                        }
+                    }
 
-            //        if (itemToCutFrom.Length >= l)
-            //        {
-            //            if (itemToCutFrom.W >= w)
-            //            {
-            //                return true;
-            //            }
-            //            else
-            //            {
-            //                if (itemToCutFrom.Length >= w)
-            //                {
-            //                    if (itemToCutFrom.W >= l)
+                    else if (itemToCutFrom.Length == lengthWP)
+                    {
+                        if (itemToCutFrom.W > widthWP)
+                        {
+                            new_Length = itemToCutFrom.Length;
+                            new_Width = itemToCutFrom.W - widthWP;
+                        }
 
-            //                    { return true; }
+                        else if (itemToCutFrom.W == widthWP)
+                        {
+                            new_Length = 0;
+                            new_Width = 0;
 
-            //                }
-            //                else
-            //                    return false;
-            //            }
+                            //нужно удалять остаток
+                        }
+                    }
 
-            //            return false;
-            //        }
-            //        else
-            //        {
-            //            if (itemToCutFrom.W >= l)
-            //            {
-            //                if (itemToCutFrom.Length >= w)
+                    else if (itemToCutFrom.Length < lengthWP)
+                    {
+                        temp = lengthWP;
+                        lengthWP = widthWP;
+                        widthWP = temp;
+                        goto L1;
+                    }
+                    //меняем значения длинны/ширины обратно
+                    temp = lengthWP;
+                    lengthWP = widthWP;
+                    widthWP = temp;
 
-            //                { return true; }
+                    MessageBox.Show("new_Length  " + new_Length.ToString());
+                    MessageBox.Show("new_Width  " + new_Width.ToString());
+                }
 
-            //                else return false;
-            //            }
-            //            return false;
-            //        }
-            //    }
-                
-            //    else
-            //    {
-            //        l = lengthWP;
-            //        if (itemToCutFrom.Length >= l) return true;
-            //        else return false;
-            //    }
-            //    #endregion
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Выберите остаток и заполните параметры заготовки!");
-                return false;
-            //}
+                SaveNewMaterialDb(itemToCutFrom.Name, itemToCutFrom.Type, itemToCutFrom.Dim, new_Length, new_Width, itemToCutFrom.H, lastVersion);
+                MessageBox.Show("Заготовка вырезана!)");
+            }
+            else { MessageBox.Show("Невозможно вырезать заготовку. Параметры заготовки больше параметров остатка!"); }
         }
-        
-        public void CutOut(DataGridView dgv, bool type)
+
+        private bool CheckingWorkpieceLessThanResidual()
         {
-            //double length_ = lengthWP;
-            //double width_ = widthWP;
-            //double temp;
+            decimal l = lengthWP;
+            decimal w = widthWP;
+            if (isFieldsFilled == true)
+            {
+                #region если поля заполнены
+                if (residualType == true)
+                {
+                    decimal temp;
 
-            //bool possOrNot = CheckingWorkpieceLessThanResidual(dgv);
+                    //определяем большую сторону заготовки
+                    if (l >= w) { }
+                    else
+                    {
+                        temp = l;
+                        l = w;
+                        w = temp;
+                    }
+
+                    if (itemToCutFrom.Length >= l)
+                    {
+                        if (itemToCutFrom.W >= w)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            if (itemToCutFrom.Length >= w)
+                            {
+                                if (itemToCutFrom.W >= l)
+
+                                { return true;
+                                }
+
+                            }
+                            else
+                                return false;
+                        }
+
+                        return false;
+                    }
+                    else
+                    {
+                        if (itemToCutFrom.W >= l)
+                        {
+                            if (itemToCutFrom.Length >= w)
+
+                            { return true;
+                            }
+
+                            else return false;
+                        }
+                        return false;
+                    }
+                }
+
+                else
+                {
+                    l = lengthWP;
+                    if (itemToCutFrom.Length >= l) return true;
+                    else return false;
+                }
+                #endregion
+            }
+            else
+            {
+                MessageBox.Show("Выберите остаток и заполните параметры заготовки!");
+                return false;
+            }
+        }
+        private int LastVersion(int balID)
+        {
+            objCon = new SqlConnection(connection);
+            objCon.Open();
+            SqlDataReader reader;
+            SqlCommand command = new SqlCommand("GetLastVersion", objCon);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@balID", balID);
+            command.Parameters.Add("@lastVersion", SqlDbType.Int).Direction = ParameterDirection.Output;
+            reader = command.ExecuteReader();
+            version = (int)command.Parameters["@lastVersion"].Value;
+            objCon.Close();
+            return version + 1;
+        }
+
+        public void SaveCuttedMaterial(int ID, int lastVersion, decimal length, decimal w)
+        {
+            objCon.Open();
+            SqlCommand save = new SqlCommand("CutOutMaterials");
+            SqlDataReader reader;
+            save.CommandType = CommandType.StoredProcedure;
+            save.Connection = objCon;
+
+            save.Parameters.AddWithValue("@BalanceID", ID);
+            save.Parameters.AddWithValue("@LastVersion", lastVersion);
+            save.Parameters.AddWithValue("@Lenth", length);
+            save.Parameters.AddWithValue("@W", w);
+            reader = save.ExecuteReader();
+
+            objCon.Close();
+
+            int id = RowToInsert();
             
-            //if (possOrNot == true)
-            //{
-            //    double new_Length = 0;
-            //    int rowNumber = RowToInsert();
-
-            //    if (type == false)
-
-            //    {
-            //        new_Length = itemToCutFrom.Length - length_;
-
-            //        MessageBox.Show(new_Length.ToString());
-            //        dataTableR.Rows[rowNumber].SetField(dataTableR.Columns["Lenth"], new_Length);
-
-            //        builder = new SqlCommandBuilder(adapterR);
-            //    }
-            //    else
-            //    {
-            //        double new_Width = 0;
-            //    L1:
-            //        if (itemToCutFrom.Length > length_)
-            //        {
-            //            if (itemToCutFrom.W > width_)
-            //            {/////////////
-            //                new_Length = itemToCutFrom.Length - length_;
-            //                new_Width = itemToCutFrom.W - width_;
-            //            }
-            //            else if (itemToCutFrom.W == width_)
-            //            {
-            //                new_Length = itemToCutFrom.Length - length_;
-            //                new_Width = itemToCutFrom.W;
-            //            }
-            //            else if (itemToCutFrom.W < width_)
-            //            {/////////////
-            //                new_Width = itemToCutFrom.W - length_;
-            //                new_Length = itemToCutFrom.Length - width_;
-            //            }
-            //        }
-
-            //        else if (itemToCutFrom.Length == length_)
-            //        {
-            //            if (itemToCutFrom.W > width_)
-            //            {
-            //                new_Length = itemToCutFrom.Length;
-            //                new_Width = itemToCutFrom.W - width_;
-            //            }
-
-            //            else if (itemToCutFrom.W == width_)
-            //            {
-            //                new_Length = 0;
-            //                new_Width = 0;
-
-            //                //нужно удалять остаток
-            //            }
-            //        }
-
-            //        else if (itemToCutFrom.Length < length_)
-            //        {
-            //            temp = length_;
-            //            length_ = width_;
-            //            width_ = temp;
-            //            goto L1;
-            //        }
-            //        //меняем значения длинны/ширины обратно
-            //        temp = length_;
-            //        length_ = width_;
-            //        width_ = temp;
-
-            //        MessageBox.Show("new_Length  " + new_Length.ToString());
-            //        MessageBox.Show("new_Width  " + new_Width.ToString());
-
-            //        dataTablePl.Rows[rowNumber].SetField(dataTablePl.Columns["Lenth"], new_Length);
-            //        dataTablePl.Rows[rowNumber].SetField(dataTablePl.Columns["W"], new_Width);
-
-            //        builder = new SqlCommandBuilder(adapterPlane);
-
-            //    }
-            //    adapterR.Update(dataTableR);
-            //    adapterPlane.Update(dataTablePl);
-            //    MessageBox.Show("Заготовка вырезана!)");
-
-            //}
-            //else { MessageBox.Show("Невозможно вырезать заготовку. Параметры заготовки больше параметров остатка!"); }
-
-            //dgv.DataSource = FillDgv();
+            dataList[id].W = w;
+            dataList[id].Length = length;
+            dataList[id].Version = lastVersion;
+        
         }
         private int RowToInsert()
         {
             int id = 0;
-            if (residualType == false)
+            
+            var col = (from item in dataList where item.BalanceID.Equals(itemToCutFrom.BalanceID) select item);
+            foreach (var item in col)
             {
-                EnumerableRowCollection<DataRow> col = (from DataRow item in dataTableR.AsEnumerable() where item.Field<int>(0).Equals(itemToCutFrom.BalanceID) select item);
-                foreach (var item in col)
-                {
-                    id = dataTableR.Rows.IndexOf(item);
-                }
+                id = dataList.IndexOf(item);
             }
-            else
-            {
-                EnumerableRowCollection<DataRow> col = (from DataRow item in dataTablePl.AsEnumerable() where item.Field<int>(0).Equals(itemToCutFrom.BalanceID) select item);
-                foreach (var item in col)
-                {
-                    id = dataTablePl.Rows.IndexOf(item);
-                }
-            }            
+
             return id;
         }
-        public DataTable FillDgv()
+
+
+
+        public List<Balance> GetItemsofTheSameVersion()
         {
-            DataTable dtToFill = new DataTable();
-            if (residualType == false)
-            {
-                dtToFill.Columns.Add("Диаметр");
-                dtToFill.Columns.Add("Длинна");
-                for (int i = 0; i < dataTableR.Rows.Count; i++)
-                {
-                    dtToFill.Rows.Add();
-                        
-                    dtToFill.Rows[i]["Диаметр"] = dataTableR.Rows[i]["Dim"];
-                    dtToFill.Rows[i]["Длинна"] = dataTableR.Rows[i]["Lenth"];
-                }
-            }
-            else
-            {
-                dtToFill.Columns.Add("Длинна");
-                dtToFill.Columns.Add("Ширина");
-                dtToFill.Columns.Add("Толщина");
-                for (int i = 0; i < dataTablePl.Rows.Count; i++)
-                {
-                    dtToFill.Rows.Add();
-
-                    dtToFill.Rows[i]["Длинна"] = dataTablePl.Rows[i]["Lenth"];
-                    dtToFill.Rows[i]["Ширина"] = dataTablePl.Rows[i]["W"];
-                    dtToFill.Rows[i]["Толщина"] = dataTablePl.Rows[i]["H"];
-                }
-            }
-            return dtToFill;
+            var list = (from item in dataList where item.Name.Equals(itemToCutFrom.Name) select item).ToList();
+            return list;
         }
-
     }
 }
