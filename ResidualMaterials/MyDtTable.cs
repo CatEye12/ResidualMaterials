@@ -172,7 +172,7 @@ namespace ResidualMaterials
             reader = command.ExecuteReader();
             maxBalanceID = (int)command.Parameters["@param1"].Value;
             objCon.Close();
-            return maxBalanceID + 1;
+            return maxBalanceID;
         }
         public void SaveNewMaterialDb(int name, bool type, decimal dim, decimal length, decimal w, decimal h, int version)
         {
@@ -200,6 +200,7 @@ namespace ResidualMaterials
             dataList.Add(new Balance {BalanceID = LastBalanceId, Version = lastVersion, Type = type, Dim = dim, Length = length, W = w, H = h, Name = name});            
         }
                
+
         public void CutOut()
         {
             decimal temp;
@@ -366,30 +367,8 @@ namespace ResidualMaterials
             objCon.Close();
             return version + 1;
         }
-        
-        /*public void SaveCuttedMaterial(int ID, int lastVersion, decimal length, decimal w)
-        {
-            objCon.Open();
-            SqlCommand save = new SqlCommand("CutOutMaterials");
-            SqlDataReader reader;
-            save.CommandType = CommandType.StoredProcedure;
-            save.Connection = objCon;
 
-            save.Parameters.AddWithValue("@BalanceID", ID);
-            save.Parameters.AddWithValue("@LastVersion", lastVersion);
-            save.Parameters.AddWithValue("@Lenth", length);
-            save.Parameters.AddWithValue("@W", w);
-            reader = save.ExecuteReader();
 
-            objCon.Close();
-
-            int id = RowToInsert();
-            
-            dataList[id].W = w;
-            dataList[id].Length = length;
-            dataList[id].Version = lastVersion;
-        
-        }*/
         private int RowToInsert()
         {
             int id = 0;
@@ -399,7 +378,6 @@ namespace ResidualMaterials
             {
                 id = dataList.IndexOf(item);
             }
-
             return id;
         }
        

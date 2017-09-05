@@ -42,8 +42,8 @@ namespace ResidualMaterials
         {
             usInter.CheckIfFieldsAreFilled(dataGridView, txtWidthWP, txtLengthWP);
             usInter.ConvTxtToDecimal(txtWidthWP, txtLengthWP);
-
             dt.CutOut();
+
             SuperPuper();
         }
 
@@ -100,9 +100,9 @@ namespace ResidualMaterials
             
             if (MyDtTable.residualType == false)
             {
-                columnName = new string[] { "Баланс", "Наименование", "Тип", "Диаметр", "Длина", "Версия" };
+                columnName = new string[] { "Баланс", "№", "Тип", "Диаметр", "Длина", "Версия" };
             }
-            else { columnName = new string[] { "Баланс", "Наименование", "Тип", "Длина", "Ширина", "Высота", "Версия" }; }
+            else { columnName = new string[] { "Баланс", "№", "Тип", "Длина", "Ширина", "Высота", "Версия" }; }
                         
 
             DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
@@ -120,7 +120,7 @@ namespace ResidualMaterials
 
             dataGridView.Columns["Баланс"].DataPropertyName = "BalanceId";
             dataGridView.Columns["Тип"].DataPropertyName = "Type";
-            dataGridView.Columns["Наименование"].DataPropertyName = "Name";
+            dataGridView.Columns["№"].DataPropertyName = "Name";
             dataGridView.Columns["Версия"].DataPropertyName = "Version";
             if (MyDtTable.residualType == false)
             {
@@ -147,9 +147,9 @@ namespace ResidualMaterials
 
             if (MyDtTable.residualType == false)
             {
-                columnName = new string[] {  "Наименование", "Диаметр", "Длина", "Версия" };
+                columnName = new string[] {  "№", "Диаметр", "Длина", "Версия" };
             }
-            else { columnName = new string[] { "Наименование","Длина", "Ширина", "Высота", "Версия" }; }
+            else { columnName = new string[] { "№","Длина", "Ширина", "Высота", "Версия" }; }
 
             DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
             for (int cnt = 0; cnt < columnName.Length; cnt++)
@@ -162,7 +162,7 @@ namespace ResidualMaterials
 
             var bindingList = new BindingList<Balance>(dt.dataListToView);
             var source = new BindingSource(bindingList, null);
-            dataGridView2.Columns["Наименование"].DataPropertyName = "Name";
+            dataGridView2.Columns["№"].DataPropertyName = "Name";
             dataGridView2.Columns["Версия"].DataPropertyName = "Version";
             if (MyDtTable.residualType == false)
             {
