@@ -9,7 +9,6 @@ namespace ResidualMaterials
         public Form1()
         {
             InitializeComponent();
-
             dt = new MyDtTable();
             usInter = new UserInterface();
             comboBox1.SelectedIndex = 0;
@@ -28,7 +27,7 @@ namespace ResidualMaterials
             usInter.ConvTextToDecimal(txtName, txtWidthDim, txtLength, txtH);
             dt.PushingDataInTable();
 
-            SuperPuper();            
+            SuperPuper();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -91,12 +90,12 @@ namespace ResidualMaterials
 
         private void SuperPuper()
         {
-            dt.dataListToView = dt.MakingDataList();
-
-            dataGridView.Columns.Clear();
+            dataGridView.Columns.Clear();      
+            dt.dataListToView = dt.MakingDataList();   
 
             dataGridView.AutoGenerateColumns = false;
             dataGridView.AutoSize = true;
+            
             string [] columnName = null;
             
             if (MyDtTable.residualType == false)
@@ -104,8 +103,7 @@ namespace ResidualMaterials
                 columnName = new string[] { "Баланс", "Наименование", "Тип", "Диаметр", "Длина", "Версия" };
             }
             else { columnName = new string[] { "Баланс", "Наименование", "Тип", "Длина", "Ширина", "Высота", "Версия" }; }
-
-
+                        
 
             DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
             for (int cnt = 0; cnt < columnName.Length; cnt++)
@@ -116,9 +114,9 @@ namespace ResidualMaterials
             }
             dataGridView.Columns.AddRange(column_array);
 
-
             var bindingList = new BindingList<Balance>(dt.dataListToView);
             var source = new BindingSource(bindingList, null);
+           
 
             dataGridView.Columns["Баланс"].DataPropertyName = "BalanceId";
             dataGridView.Columns["Тип"].DataPropertyName = "Type";
@@ -140,21 +138,18 @@ namespace ResidualMaterials
 
         public void SuperPuper2()
         {
-            dt.dataListToView = dt.GetItemsofTheSameVersion();
             dataGridView2.Columns.Clear();
-
+            dt.dataListToView = dt.GetItemsofTheSameVersion();
+            
             dataGridView2.AutoGenerateColumns = false;
             dataGridView2.AutoSize = true;
             string[] columnName = null;
 
-            
             if (MyDtTable.residualType == false)
             {
-                columnName = new string[] { "Наименование", "Диаметр", "Длина", "Версия" };
+                columnName = new string[] {  "Наименование", "Диаметр", "Длина", "Версия" };
             }
-            else { columnName = new string[] { "Наименование", "Длина", "Ширина", "Высота", "Версия" }; }
-
-
+            else { columnName = new string[] { "Наименование","Длина", "Ширина", "Высота", "Версия" }; }
 
             DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
             for (int cnt = 0; cnt < columnName.Length; cnt++)
@@ -164,8 +159,6 @@ namespace ResidualMaterials
                 column_array[cnt] = col;
             }
             dataGridView2.Columns.AddRange(column_array);
-
-
 
             var bindingList = new BindingList<Balance>(dt.dataListToView);
             var source = new BindingSource(bindingList, null);
@@ -191,9 +184,8 @@ namespace ResidualMaterials
             usInter.CheckType(comboBox1);
             MyDtTable.itemToCutFrom = usInter.GetSelectedBalance(dataGridView);
 
-            //show 2 dataGridView
+            //show 2nd dataGridView
             SuperPuper2();
-
         }
     }
 }

@@ -58,7 +58,7 @@ namespace ResidualMaterials
             }
             else
             {
-                if (!string.IsNullOrEmpty(length.Text) && !string.IsNullOrEmpty(width.Text))
+                if (!string.IsNullOrEmpty(name.Text) && !string.IsNullOrEmpty(length.Text) && !string.IsNullOrEmpty(width.Text))
 
                 { MyDtTable.isFieldsFilled = true; }
                 else MyDtTable.isFieldsFilled = false;
@@ -102,7 +102,8 @@ namespace ResidualMaterials
             }
             else MessageBox.Show("Выберите остаток и заполните параметры заготовки!");
         }
-        
+
+
         public void CheckType(ComboBox bx)
         {
             if (bx.SelectedIndex == 0) { MyDtTable.residualType = false; } else MyDtTable.residualType = true;

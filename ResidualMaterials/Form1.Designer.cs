@@ -32,10 +32,12 @@
             this.label12 = new System.Windows.Forms.Label();
             this.txtWidthDim = new System.Windows.Forms.TextBox();
             this.lblWidthDimWP = new System.Windows.Forms.Label();
+            this.txtName = new System.Windows.Forms.TextBox();
             this.txtH = new System.Windows.Forms.TextBox();
             this.txtLengthWP = new System.Windows.Forms.TextBox();
             this.txtLength = new System.Windows.Forms.TextBox();
             this.lblWidthDim = new System.Windows.Forms.Label();
+            this.lblName = new System.Windows.Forms.Label();
             this.lblH = new System.Windows.Forms.Label();
             this.lblLength = new System.Windows.Forms.Label();
             this.txtWidthWP = new System.Windows.Forms.TextBox();
@@ -50,8 +52,6 @@
             this.CreateButton = new System.Windows.Forms.Button();
             this.cutOutBtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lblName = new System.Windows.Forms.Label();
-            this.txtName = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -111,6 +111,14 @@
             this.lblWidthDimWP.TabIndex = 24;
             this.lblWidthDimWP.Text = "Длина заготовки";
             // 
+            // txtName
+            // 
+            this.txtName.Location = new System.Drawing.Point(141, 83);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(100, 20);
+            this.txtName.TabIndex = 19;
+            this.txtName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtH_KeyPress);
+            // 
             // txtH
             // 
             this.txtH.Location = new System.Drawing.Point(141, 181);
@@ -143,6 +151,15 @@
             this.lblWidthDim.Size = new System.Drawing.Size(121, 13);
             this.lblWidthDim.TabIndex = 13;
             this.lblWidthDim.Text = "Ширина листа/полосы";
+            // 
+            // lblName
+            // 
+            this.lblName.AutoSize = true;
+            this.lblName.Location = new System.Drawing.Point(6, 90);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(83, 13);
+            this.lblName.TabIndex = 12;
+            this.lblName.Text = "Наименование";
             // 
             // lblH
             // 
@@ -257,6 +274,7 @@
             this.dataGridView2.Location = new System.Drawing.Point(3, 16);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.ReadOnly = true;
+            this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView2.Size = new System.Drawing.Size(584, 342);
             this.dataGridView2.TabIndex = 0;
             // 
@@ -287,23 +305,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(163, 141);
             this.panel1.TabIndex = 7;
-            // 
-            // lblName
-            // 
-            this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(6, 90);
-            this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(83, 13);
-            this.lblName.TabIndex = 12;
-            this.lblName.Text = "Наименование";
-            // 
-            // txtName
-            // 
-            this.txtName.Location = new System.Drawing.Point(141, 83);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(100, 20);
-            this.txtName.TabIndex = 19;
-            this.txtName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtH_KeyPress);
             // 
             // Form1
             // 

@@ -18,7 +18,6 @@ namespace ResidualMaterials
         
         public List<Balance> dataList;
         public List<Balance> dataListToView;
-        
 
         int LastBalanceId;
         int lastVersion;
@@ -36,7 +35,6 @@ namespace ResidualMaterials
         public static decimal widthWP { get; set; }
         public static int name { get; set; }
         public static int version { get; set; }
-
 
 
         public void Load_Data(bool type)
@@ -67,7 +65,7 @@ namespace ResidualMaterials
                 }
         public List<Balance> MakingDataList()
         {
-            var list = from item in dataList where item.Type.Equals(residualType)               
+            /*var list = from item in dataList where item.Type.Equals(residualType)               
                         select new Balance
                         {
                             BalanceID = item.BalanceID,
@@ -79,31 +77,50 @@ namespace ResidualMaterials
                             Name = item.Name,
                             Version = item.Version
                         };
-            return list.ToList();            
+            return list.ToList(); */
+
+
+            List<Balance> result = new List<Balance>();
+            Balance bal;
+            var list = (from it in 
+                            (from item in dataList where item.Type.Equals(residualType) group item by item.Name ) 
+                        orderby version descending select it);
+            foreach (var item in list)
+            {
+                item.AsEnumerable();
+                bal = new Balance() {BalanceID = item.Last().BalanceID, Type = item.Last().Type,
+                                     Dim = item.Last().Dim, Length = item.Last().Length, W = item.Last().W,
+                                     H = item.Last().H, Name = item.Last().Name, Version = item.Last().Version};
+                result.Add(bal);
+            }                     
+                                
+            return result;    
         }
-       
+        public List<Balance> GetItemsofTheSameVersion()
+        {
+            var list = (from item in dataList where item.Name.Equals(itemToCutFrom.Name) select item).ToList();
+            return list;
+        }
 
         public void PushingDataInTable()
         {
             if (isFieldsFilled == true)
             {
-               
-                if (LastBalanceId == 0)
+                if (CheckNameUniquenes())
                 {
-                    LastBalanceId = LastRowBalanceId();
-                }
-                else { LastBalanceId++; }
+                   
+                    if (residualType == true)
+                    {
+                        inputMaterial = ConvertInputDataToList(name, length, widthDim, height); MessageBox.Show("Ploskoe");
+                    }
+                    else
+                    {
+                        inputMaterial = ConvertInputDataToList(name, length, widthDim); MessageBox.Show("Telo vrascheniya");
+                    }
 
-                if (residualType == true)
-                {
-                    inputMaterial = ConvertInputDataToList(name, length, widthDim, height); MessageBox.Show("Ploskoe");
+                    SaveNewMaterialDb(inputMaterial[0].Name, inputMaterial[0].Type, inputMaterial[0].Dim, inputMaterial[0].Length, inputMaterial[0].W, inputMaterial[0].H, 0);
                 }
-                else
-                {
-                    inputMaterial = ConvertInputDataToList(name, length, widthDim); MessageBox.Show("Telo vrascheniya");
-                }
-                
-                SaveNewMaterialDb(inputMaterial[0].Name, inputMaterial[0].Type, inputMaterial[0].Dim, inputMaterial[0].Length, inputMaterial[0].W, inputMaterial[0].H, 0);                
+                else MessageBox.Show("Материал с таким именем уже существует!");
             }
         }
 
@@ -131,6 +148,16 @@ namespace ResidualMaterials
             } };
 
             return list;           
+        }
+        private bool CheckNameUniquenes()
+        {
+            var list = (from it in dataList where it.Name.Equals(name) select it).ToList();
+
+            if (list.Count != 0)
+            {
+                return false;
+            }
+            else return true;
         }
         private int LastRowBalanceId()
         {
@@ -165,12 +192,13 @@ namespace ResidualMaterials
             reader = save.ExecuteReader();
             
             objCon.Close();
-
-            dataList.Add(new Balance {BalanceID = LastBalanceId, Version = 0, Type = type, Dim = dim, Length = length, W = w, H = h, Name = name});
-            
+            if (LastBalanceId == 0)
+            {
+                LastBalanceId = LastRowBalanceId();
+            }
+            else { LastBalanceId++; }
+            dataList.Add(new Balance {BalanceID = LastBalanceId, Version = lastVersion, Type = type, Dim = dim, Length = length, W = w, H = h, Name = name});            
         }
-
-
                
         public void CutOut()
         {
@@ -338,8 +366,8 @@ namespace ResidualMaterials
             objCon.Close();
             return version + 1;
         }
-
-        public void SaveCuttedMaterial(int ID, int lastVersion, decimal length, decimal w)
+        
+        /*public void SaveCuttedMaterial(int ID, int lastVersion, decimal length, decimal w)
         {
             objCon.Open();
             SqlCommand save = new SqlCommand("CutOutMaterials");
@@ -361,7 +389,7 @@ namespace ResidualMaterials
             dataList[id].Length = length;
             dataList[id].Version = lastVersion;
         
-        }
+        }*/
         private int RowToInsert()
         {
             int id = 0;
@@ -374,13 +402,6 @@ namespace ResidualMaterials
 
             return id;
         }
-
-
-
-        public List<Balance> GetItemsofTheSameVersion()
-        {
-            var list = (from item in dataList where item.Name.Equals(itemToCutFrom.Name) select item).ToList();
-            return list;
-        }
+       
     }
 }
