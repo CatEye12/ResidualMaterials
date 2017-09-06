@@ -223,7 +223,7 @@ namespace ResidualMaterials
                         }
                         else if (itemToCutFrom.W < widthWP)
                         {/////////////
-                            new_Width = itemToCutFrom.W - lengthWP;
+                            new_Width = itemToCutFrom.W;
                             new_Length = itemToCutFrom.Length - widthWP;
                         }
                     }
