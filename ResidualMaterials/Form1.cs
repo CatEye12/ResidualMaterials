@@ -15,7 +15,7 @@ namespace ResidualMaterials
             dt.Load_Data(MyDtTable.residualType);
 
             SuperPuper();
-        }
+        }    
 
         MyDtTable dt;
         UserInterface usInter;
@@ -62,7 +62,7 @@ namespace ResidualMaterials
             }
         }
         
-        #region only numbers input
+        #region only numbers input //////////
         private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
             AllowUserInputOnlyNumbers(sender, e);
@@ -100,9 +100,9 @@ namespace ResidualMaterials
             
             if (MyDtTable.residualType == false)
             {
-                columnName = new string[] { "Баланс", "№", "Тип", "Диаметр", "Длина", "Версия" };
+                columnName = new string[] {"№", "Диаметр", "Длина", "Версия" };
             }
-            else { columnName = new string[] { "Баланс", "№", "Тип", "Длина", "Ширина", "Высота", "Версия" }; }
+            else { columnName = new string[] { "№", "Длина", "Ширина", "Высота", "Версия" }; }
                         
 
             DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
@@ -118,8 +118,6 @@ namespace ResidualMaterials
             var source = new BindingSource(bindingList, null);
            
 
-            dataGridView.Columns["Баланс"].DataPropertyName = "BalanceId";
-            dataGridView.Columns["Тип"].DataPropertyName = "Type";
             dataGridView.Columns["№"].DataPropertyName = "Name";
             dataGridView.Columns["Версия"].DataPropertyName = "Version";
             if (MyDtTable.residualType == false)
@@ -179,13 +177,11 @@ namespace ResidualMaterials
             dataGridView2.DataSource = source;
         }
 
-        private void dataGridView_SelectionChanged(object sender, EventArgs e)
+        private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            usInter.CheckType(comboBox1);
             MyDtTable.itemToCutFrom = usInter.GetSelectedBalance(dataGridView);
-
-            //show 2nd dataGridView
+            
             SuperPuper2();
         }
-    }
+    } 
 }

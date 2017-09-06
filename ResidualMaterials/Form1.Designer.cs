@@ -253,7 +253,7 @@
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(584, 342);
             this.dataGridView.TabIndex = 0;
-            this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
+            this.dataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellClick);
             // 
             // groupBox3
             // 
@@ -280,7 +280,7 @@
             // 
             // CreateButton
             // 
-            this.CreateButton.Location = new System.Drawing.Point(513, 24);
+            this.CreateButton.Location = new System.Drawing.Point(520, 29);
             this.CreateButton.Name = "CreateButton";
             this.CreateButton.Size = new System.Drawing.Size(131, 22);
             this.CreateButton.TabIndex = 5;
@@ -290,7 +290,7 @@
             // 
             // cutOutBtn
             // 
-            this.cutOutBtn.Location = new System.Drawing.Point(513, 68);
+            this.cutOutBtn.Location = new System.Drawing.Point(520, 73);
             this.cutOutBtn.Name = "cutOutBtn";
             this.cutOutBtn.Size = new System.Drawing.Size(131, 22);
             this.cutOutBtn.TabIndex = 6;
@@ -301,7 +301,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.panel1.Location = new System.Drawing.Point(1003, 46);
+            this.panel1.Location = new System.Drawing.Point(1024, 24);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(163, 141);
             this.panel1.TabIndex = 7;

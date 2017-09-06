@@ -65,21 +65,6 @@ namespace ResidualMaterials
                 }
         public List<Balance> MakingDataList()
         {
-            /*var list = from item in dataList where item.Type.Equals(residualType)               
-                        select new Balance
-                        {
-                            BalanceID = item.BalanceID,
-                            Type = item.Type,
-                            Dim = item.Dim,
-                            Length = item.Length, 
-                            W = item.W,
-                            H = item.H,
-                            Name = item.Name,
-                            Version = item.Version
-                        };
-            return list.ToList(); */
-
-
             List<Balance> result = new List<Balance>();
             Balance bal;
             var list = (from it in 
@@ -94,7 +79,7 @@ namespace ResidualMaterials
                 result.Add(bal);
             }                     
                                 
-            return result;    
+            return result;
         }
         public List<Balance> GetItemsofTheSameVersion()
         {
@@ -380,6 +365,6 @@ namespace ResidualMaterials
             }
             return id;
         }
-       
+               
     }
 }
