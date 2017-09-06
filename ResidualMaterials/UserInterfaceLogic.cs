@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Windows.Forms;
+
 
 namespace ResidualMaterials
 {
@@ -112,10 +111,19 @@ namespace ResidualMaterials
         public Balance GetSelectedBalance(DataGridView dgv)
         {
             Balance currentObject = (Balance)dgv.CurrentRow.DataBoundItem;
-
-            //MessageBox.Show(currentObject.BalanceID.ToString());
-
+            
             return currentObject;
+        }
+
+        public void AddParametersOfDeletedWP(dynamic j, DataGridView dgv, string colName)
+        {
+            dgv.Columns.Add(colName, colName);
+            List<Balance> list = j.GetItemsofTheSameVersion();
+
+            for (int i = 0; i < list.Count-1; i++)
+            {
+                dgv[colName, i].Value = list[i].Length - list[i+1].Length ;
+            }
         }
     }
 }

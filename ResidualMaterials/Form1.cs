@@ -9,6 +9,7 @@ namespace ResidualMaterials
         public Form1()
         {
             InitializeComponent();
+
             dt = new MyDtTable();
             usInter = new UserInterface();
             comboBox1.SelectedIndex = 0;
@@ -50,13 +51,13 @@ namespace ResidualMaterials
         private static void AllowUserInputOnlyNumbers(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
-                        (e.KeyChar != '.'))
+                        (e.KeyChar != ','))
             {
                 e.Handled = true;
             }
 
             // only allow one decimal point
-            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            if ((e.KeyChar == ',') && ((sender as TextBox).Text.IndexOf(',') > -1))
             {
                 e.Handled = true;
             }
@@ -145,9 +146,9 @@ namespace ResidualMaterials
 
             if (MyDtTable.residualType == false)
             {
-                columnName = new string[] {  "№", "Диаметр", "Длина", "Версия" };
+                columnName = new string[] {  "№", "Диаметр", "Длина", "Версия"};
             }
-            else { columnName = new string[] { "№","Длина", "Ширина", "Высота", "Версия" }; }
+            else { columnName = new string[] { "№","Длина", "Ширина", "Высота", "Версия"}; }
 
             DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
             for (int cnt = 0; cnt < columnName.Length; cnt++)
@@ -165,7 +166,7 @@ namespace ResidualMaterials
             if (MyDtTable.residualType == false)
             {
                 dataGridView2.Columns["Диаметр"].DataPropertyName = "Dim";
-                dataGridView2.Columns["Длина"].DataPropertyName = "Length";
+                dataGridView2.Columns["Длина"].DataPropertyName = "Length";                
             }
             else
             {
@@ -175,6 +176,7 @@ namespace ResidualMaterials
             }
 
             dataGridView2.DataSource = source;
+            usInter.AddParametersOfDeletedWP(dt,dataGridView2, "Длина вырезаной заготовки2");
         }
 
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)

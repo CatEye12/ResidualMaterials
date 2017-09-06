@@ -96,11 +96,11 @@ namespace ResidualMaterials
                    
                     if (residualType == true)
                     {
-                        inputMaterial = ConvertInputDataToList(name, length, widthDim, height); MessageBox.Show("Ploskoe");
+                        inputMaterial = ConvertInputDataToList(name, length, widthDim, height);
                     }
                     else
                     {
-                        inputMaterial = ConvertInputDataToList(name, length, widthDim); MessageBox.Show("Telo vrascheniya");
+                        inputMaterial = ConvertInputDataToList(name, length, widthDim);
                     }
 
                     SaveNewMaterialDb(inputMaterial[0].Name, inputMaterial[0].Type, inputMaterial[0].Dim, inputMaterial[0].Length, inputMaterial[0].W, inputMaterial[0].H, 0);
@@ -159,7 +159,7 @@ namespace ResidualMaterials
             objCon.Close();
             return maxBalanceID;
         }
-        public void SaveNewMaterialDb(int name, bool type, decimal dim, decimal length, decimal w, decimal h, int version)
+        private void SaveNewMaterialDb(int name, bool type, decimal dim, decimal length, decimal w, decimal h, int version)
         {
             objCon.Open();
             SqlCommand save = new SqlCommand("AddMaretial");
@@ -199,11 +199,8 @@ namespace ResidualMaterials
                 lastVersion = LastVersion(itemToCutFrom.BalanceID);
 
                 if (residualType == false)
-
                 {
-                    new_Length = itemToCutFrom.Length - lengthWP;
-
-                    MessageBox.Show(new_Length.ToString());
+                    new_Length = itemToCutFrom.Length - lengthWP;                    
                 }
                 else
                 {
@@ -252,17 +249,13 @@ namespace ResidualMaterials
                         widthWP = temp;
                         goto L1;
                     }
-                    //меняем значения длинны/ширины обратно
+                    //меняем значения длины/ширины обратно
                     temp = lengthWP;
                     lengthWP = widthWP;
                     widthWP = temp;
-
-                    MessageBox.Show("new_Length  " + new_Length.ToString());
-                    MessageBox.Show("new_Width  " + new_Width.ToString());
                 }
 
                 SaveNewMaterialDb(itemToCutFrom.Name, itemToCutFrom.Type, itemToCutFrom.Dim, new_Length, new_Width, itemToCutFrom.H, lastVersion);
-                MessageBox.Show("Заготовка вырезана!)");
             }
             else { MessageBox.Show("Невозможно вырезать заготовку. Параметры заготовки больше параметров остатка!"); }
         }
@@ -364,7 +357,6 @@ namespace ResidualMaterials
                 id = dataList.IndexOf(item);
             }
             return id;
-        }
-               
+        }               
     }
 }
