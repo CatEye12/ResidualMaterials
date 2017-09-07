@@ -38,31 +38,31 @@ namespace ResidualMaterials
 
 
         public void Load_Data(bool type)
-                {
-                    objCon = new SqlConnection(connection);
-                    objCon.Open();
+        {
+            objCon = new SqlConnection(connection);
+            objCon.Open();
             
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM Balance " + type, objCon);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM Balance " + type, objCon);
                         
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    dataList.Add(new Balance()
                     {
-                        while (reader.Read())
-                        {
-                            dataList.Add(new Balance()
-                            {
-                                BalanceID = (int)reader["BalanceId"], 
-                                Type = (bool)reader["Type"],
-                                Dim = (decimal)reader["Dim"],
-                                Length = (decimal)reader["Lenth"],
-                                W = (decimal)reader["W"],
-                                H = (decimal)reader["H"],
-                                Name = (int)reader["Name"],
-                                Version = (int)reader["Version"]
-                            }); //Specify column index 
-                        }
-                    }
-                    objCon.Close();
+                        BalanceID = (int)reader["BalanceId"], 
+                        Type = (bool)reader["Type"],
+                        Dim = (decimal)reader["Dim"],
+                        Length = (decimal)reader["Lenth"],
+                        W = (decimal)reader["W"],
+                        H = (decimal)reader["H"],
+                        Name = (int)reader["Name"],
+                        Version = (int)reader["Version"]
+                    }); //Specify column index 
                 }
+            }
+            objCon.Close();
+        }
         public List<Balance> MakingDataList()
         {
             List<Balance> result = new List<Balance>();
@@ -86,6 +86,7 @@ namespace ResidualMaterials
             var list = (from item in dataList where item.Name.Equals(itemToCutFrom.Name) select item).ToList();
             return list;
         }
+
 
         public void PushingDataInTable()
         {
@@ -194,6 +195,7 @@ namespace ResidualMaterials
             
             if (possOrNot == true)
             {
+                #region 
                 decimal new_Length = 0;
                 decimal new_Width = 0;
                 lastVersion = LastVersion(itemToCutFrom.BalanceID);
@@ -253,8 +255,9 @@ namespace ResidualMaterials
                     temp = lengthWP;
                     lengthWP = widthWP;
                     widthWP = temp;
+                    
                 }
-
+#endregion
                 SaveNewMaterialDb(itemToCutFrom.Name, itemToCutFrom.Type, itemToCutFrom.Dim, new_Length, new_Width, itemToCutFrom.H, lastVersion);
             }
             else { MessageBox.Show("Невозможно вырезать заготовку. Параметры заготовки больше параметров остатка!"); }
@@ -357,6 +360,58 @@ namespace ResidualMaterials
                 id = dataList.IndexOf(item);
             }
             return id;
-        }               
+        }
+
+        public void CancelCutting()
+        {
+            objCon.Open();
+            SqlCommand cancelCutting = new SqlCommand("CancelCutting", objCon);
+            cancelCutting.CommandType = CommandType.StoredProcedure;
+            SqlDataReader reader;
+
+            cancelCutting.Parameters.AddWithValue("name", itemToCutFrom.Name);
+            cancelCutting.Parameters.AddWithValue("version", itemToCutFrom.Version);
+            reader = cancelCutting.ExecuteReader();
+            objCon.Close();
+
+            dataList.RemoveAt(RowToInsert());
+        }
+
+        public void DeleteResidual()
+        {
+            if (itemToCutFrom.Version == 0)
+            {
+                CancelCutting();
+            }
+            else { MessageBox.Show("Нельзя удалить материал!"); }
+        }
+
+        public void EditResidual()
+        {
+            if (itemToCutFrom.Version == 0)
+            {
+                objCon.Open();
+                SqlCommand save = new SqlCommand("EditMaterial");
+                SqlDataReader reader;
+                save.CommandType = CommandType.StoredProcedure;
+                save.Connection = objCon;
+
+                save.Parameters.AddWithValue("@BalanceID", itemToCutFrom.BalanceID);
+                save.Parameters.AddWithValue("@Name", name);
+                save.Parameters.AddWithValue("@Dim", widthDim);
+                save.Parameters.AddWithValue("@Lenth", length);
+                save.Parameters.AddWithValue("@W", widthDim);
+                reader = save.ExecuteReader();
+
+                objCon.Close();
+
+                int id = RowToInsert();
+                dataList[id].Name = name;
+                dataList[id].Dim = widthDim;
+                dataList[id].Length = length;
+                dataList[id].W = widthDim;
+            }
+            else { MessageBox.Show("Нельзя изменить параметры остатка!"); }
+        }
     }
 }

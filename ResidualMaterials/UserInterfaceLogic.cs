@@ -52,14 +52,18 @@ namespace ResidualMaterials
             {
                 if (!string.IsNullOrEmpty(name.Text) && !string.IsNullOrEmpty(width.Text) && !string.IsNullOrEmpty(length.Text) && !string.IsNullOrEmpty(height.Text))
 
-                { MyDtTable.isFieldsFilled = true; }
+                {
+                    MyDtTable.isFieldsFilled = true;
+                }
                 else MyDtTable.isFieldsFilled = false;
             }
             else
             {
                 if (!string.IsNullOrEmpty(name.Text) && !string.IsNullOrEmpty(length.Text) && !string.IsNullOrEmpty(width.Text))
 
-                { MyDtTable.isFieldsFilled = true; }
+                {
+                    MyDtTable.isFieldsFilled = true;
+                }
                 else MyDtTable.isFieldsFilled = false;
             }
         }
@@ -67,8 +71,7 @@ namespace ResidualMaterials
         public void ConvTextToDecimal(TextBox name, TextBox w, TextBox l, TextBox h)//for input
         {
             if (MyDtTable.isFieldsFilled == true)
-
-            {
+            {                
                 if (MyDtTable.residualType == false)
                 {
                     MyDtTable.widthDim = Convert.ToDecimal(w.Text);
@@ -99,7 +102,7 @@ namespace ResidualMaterials
                     MyDtTable.lengthWP = Convert.ToDecimal(l.Text);
                 }
             }
-            else MessageBox.Show("Выберите остаток и заполните параметры заготовки!");
+            else { }
         }
 
 
@@ -115,7 +118,7 @@ namespace ResidualMaterials
             return currentObject;
         }
 
-        public void AddParametersOfDeletedWP(dynamic j, DataGridView dgv, string colName)
+        public void AddParametersOfDeletedWPLength(dynamic j, DataGridView dgv, string colName)
         {
             dgv.Columns.Add(colName, colName);
             List<Balance> list = j.GetItemsofTheSameVersion();
@@ -125,5 +128,40 @@ namespace ResidualMaterials
                 dgv[colName, i].Value = list[i].Length - list[i+1].Length ;
             }
         }
+        public void AddParametersOfDeletedWP(dynamic j, DataGridView dgv, string colNameLength, string colNameWidth)
+        {
+            dgv.Columns.Add(colNameLength, colNameLength);
+            dgv.Columns.Add(colNameWidth, colNameWidth);
+
+            List<Balance> list = j.GetItemsofTheSameVersion();
+
+            for (int i = 0; i < list.Count - 1; i++)
+            {
+                dgv[colNameLength, i].Value = list[i].Length - list[i + 1].Length;
+                dgv[colNameWidth, i].Value = list[i].W - list[i + 1].W;
+            }
+        }
+
+        public void FillTxtBoxes(TextBox name, TextBox widthDim, TextBox length, TextBox height)           
+        {
+            name.Text = MyDtTable.itemToCutFrom.Name.ToString();
+            length.Text = MyDtTable.itemToCutFrom.Length.ToString();
+
+            if (MyDtTable.residualType)
+            {
+                widthDim.Text = MyDtTable.itemToCutFrom.W.ToString();
+                height.Text = MyDtTable.itemToCutFrom.H.ToString();
+            }
+            else widthDim.Text = MyDtTable.itemToCutFrom.Dim.ToString();     
+        }
+
+        public void ClearTxtBoxes(TextBox name, TextBox widthDim, TextBox length, TextBox height)
+        {
+            name.Text = "";
+            widthDim.Text = "";
+            length.Text = "";
+            height.Text = "";
+        }
+        
     }
 }

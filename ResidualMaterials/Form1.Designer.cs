@@ -52,6 +52,9 @@
             this.CreateButton = new System.Windows.Forms.Button();
             this.cutOutBtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.CancelDeletingButton = new System.Windows.Forms.Button();
+            this.DeleteResidualButton = new System.Windows.Forms.Button();
+            this.EditMaterialButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -242,6 +245,7 @@
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -269,6 +273,7 @@
             // 
             this.dataGridView2.AllowUserToAddRows = false;
             this.dataGridView2.AllowUserToDeleteRows = false;
+            this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView2.Location = new System.Drawing.Point(3, 16);
@@ -290,7 +295,7 @@
             // 
             // cutOutBtn
             // 
-            this.cutOutBtn.Location = new System.Drawing.Point(520, 73);
+            this.cutOutBtn.Location = new System.Drawing.Point(695, 29);
             this.cutOutBtn.Name = "cutOutBtn";
             this.cutOutBtn.Size = new System.Drawing.Size(131, 22);
             this.cutOutBtn.TabIndex = 6;
@@ -306,11 +311,44 @@
             this.panel1.Size = new System.Drawing.Size(163, 141);
             this.panel1.TabIndex = 7;
             // 
+            // CancelDeletingButton
+            // 
+            this.CancelDeletingButton.Location = new System.Drawing.Point(695, 68);
+            this.CancelDeletingButton.Name = "CancelDeletingButton";
+            this.CancelDeletingButton.Size = new System.Drawing.Size(131, 41);
+            this.CancelDeletingButton.TabIndex = 8;
+            this.CancelDeletingButton.Text = "Отменить последнее вырезание";
+            this.CancelDeletingButton.UseVisualStyleBackColor = true;
+            this.CancelDeletingButton.Click += new System.EventHandler(this.CancelDeletingButton_Click);
+            // 
+            // DeleteResidualButton
+            // 
+            this.DeleteResidualButton.Location = new System.Drawing.Point(520, 68);
+            this.DeleteResidualButton.Name = "DeleteResidualButton";
+            this.DeleteResidualButton.Size = new System.Drawing.Size(131, 22);
+            this.DeleteResidualButton.TabIndex = 9;
+            this.DeleteResidualButton.Text = "Удалить остаток";
+            this.DeleteResidualButton.UseVisualStyleBackColor = true;
+            this.DeleteResidualButton.Click += new System.EventHandler(this.DeleteResidualButton_Click);
+            // 
+            // EditMaterialButton
+            // 
+            this.EditMaterialButton.Location = new System.Drawing.Point(520, 108);
+            this.EditMaterialButton.Name = "EditMaterialButton";
+            this.EditMaterialButton.Size = new System.Drawing.Size(131, 41);
+            this.EditMaterialButton.TabIndex = 10;
+            this.EditMaterialButton.Text = "Изменить параметры остатка";
+            this.EditMaterialButton.UseVisualStyleBackColor = true;
+            this.EditMaterialButton.Click += new System.EventHandler(this.EditMaterialButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1217, 633);
+            this.Controls.Add(this.EditMaterialButton);
+            this.Controls.Add(this.DeleteResidualButton);
+            this.Controls.Add(this.CancelDeletingButton);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.cutOutBtn);
@@ -355,6 +393,9 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label lblName;
+        private System.Windows.Forms.Button CancelDeletingButton;
+        private System.Windows.Forms.Button DeleteResidualButton;
+        private System.Windows.Forms.Button EditMaterialButton;
     }
 }
 

@@ -33,6 +33,7 @@ namespace ResidualMaterials
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            usInter.ClearTxtBoxes(txtName, txtWidthDim, txtLength, txtH);
             usInter.CheckType(comboBox1);
             usInter.ManagingUserInterface(lblWidthWP, lblH, lblWidthDim, txtWidthWP, txtH);
             
@@ -46,6 +47,7 @@ namespace ResidualMaterials
             dt.CutOut();
 
             SuperPuper();
+            SuperPuper2();
         }
 
         private static void AllowUserInputOnlyNumbers(object sender, KeyPressEventArgs e)
@@ -134,7 +136,6 @@ namespace ResidualMaterials
             }
             dataGridView.DataSource = source;
         }
-
         public void SuperPuper2()
         {
             dataGridView2.Columns.Clear();
@@ -163,26 +164,51 @@ namespace ResidualMaterials
             var source = new BindingSource(bindingList, null);
             dataGridView2.Columns["№"].DataPropertyName = "Name";
             dataGridView2.Columns["Версия"].DataPropertyName = "Version";
+
+            dataGridView2.DataSource = source;
             if (MyDtTable.residualType == false)
             {
                 dataGridView2.Columns["Диаметр"].DataPropertyName = "Dim";
-                dataGridView2.Columns["Длина"].DataPropertyName = "Length";                
+                dataGridView2.Columns["Длина"].DataPropertyName = "Length";
+                usInter.AddParametersOfDeletedWPLength(dt,dataGridView2, "Длина вырезаной заготовки");           
             }
             else
             {
                 dataGridView2.Columns["Длина"].DataPropertyName = "Length";
                 dataGridView2.Columns["Ширина"].DataPropertyName = "W";
                 dataGridView2.Columns["Высота"].DataPropertyName = "H";
-            }
-
-            dataGridView2.DataSource = source;
-            usInter.AddParametersOfDeletedWP(dt,dataGridView2, "Длина вырезаной заготовки2");
+                usInter.AddParametersOfDeletedWP(dt,dataGridView2, "Длина вырезаной заготовки", "Ширина вырезаной заготовки");  
+            }     
         }
 
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            MyDtTable.itemToCutFrom = usInter.GetSelectedBalance(dataGridView);
-            
+            MyDtTable.itemToCutFrom = usInter.GetSelectedBalance(dataGridView);            
+            SuperPuper2();
+            usInter.FillTxtBoxes(txtName, txtWidthDim, txtLength, txtH);
+        }
+
+        private void CancelDeletingButton_Click(object sender, EventArgs e)
+        {
+            dt.CancelCutting();
+            SuperPuper();
+            SuperPuper2();
+        }
+
+        private void DeleteResidualButton_Click(object sender, EventArgs e)
+        {
+            dt.DeleteResidual();
+            SuperPuper();
+            SuperPuper2();
+        }
+
+        private void EditMaterialButton_Click(object sender, EventArgs e)
+        {
+            usInter.CheckIfFieldsAreFilled(txtName, txtWidthDim, txtLength, txtH);
+            usInter.ConvTextToDecimal(txtName, txtWidthDim, txtLength, txtH);
+            dt.EditResidual();
+
+            SuperPuper();
             SuperPuper2();
         }
     } 
