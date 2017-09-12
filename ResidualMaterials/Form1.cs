@@ -15,7 +15,7 @@ namespace ResidualMaterials
             comboBox1.SelectedIndex = 0;
             dt.Load_Data(MyDtTable.residualType);
 
-            SuperPuper();
+            usInter.SuperPuper(dataGridView, dt);
         }    
 
         MyDtTable dt;
@@ -28,16 +28,17 @@ namespace ResidualMaterials
             usInter.ConvTextToDecimal(txtName, txtWidthDim, txtLength, txtH);
             dt.PushingDataInTable();
 
-            SuperPuper();
+            usInter.SuperPuper(dataGridView, dt);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            usInter.ClearTxtBoxes(txtName, txtWidthDim, txtLength, txtH);
+            usInter.ClearTxtBoxes(txtName, txtWidthDim, txtLength, txtH, txtLengthWP, txtWidthWP);
             usInter.CheckType(comboBox1);
             usInter.ManagingUserInterface(lblWidthWP, lblH, lblWidthDim, txtWidthWP, txtH);
             
-            SuperPuper();
+            usInter.SuperPuper(dataGridView, dt);
+            dataGridView2.Columns.Clear();
         }
         
         private void CutOut_Click(object sender, EventArgs e)
@@ -46,8 +47,8 @@ namespace ResidualMaterials
             usInter.ConvTxtToDecimal(txtWidthWP, txtLengthWP);
             dt.CutOut();
 
-            SuperPuper();
-            SuperPuper2();
+            usInter.SuperPuper(dataGridView, dt);
+            usInter.SuperPuper2(dataGridView2, dt, usInter);
         }
 
         private static void AllowUserInputOnlyNumbers(object sender, KeyPressEventArgs e)
@@ -91,115 +92,25 @@ namespace ResidualMaterials
         }
         #endregion
 
-        private void SuperPuper()
-        {
-            dataGridView.Columns.Clear();      
-            dt.dataListToView = dt.MakingDataList();   
-
-            dataGridView.AutoGenerateColumns = false;
-            dataGridView.AutoSize = true;
-            
-            string [] columnName = null;
-            
-            if (MyDtTable.residualType == false)
-            {
-                columnName = new string[] {"№", "Диаметр", "Длина", "Версия" };
-            }
-            else { columnName = new string[] { "№", "Длина", "Ширина", "Высота", "Версия" }; }
-                        
-
-            DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
-            for (int cnt = 0; cnt < columnName.Length; cnt++)
-            {
-                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
-                col.Name = columnName[cnt];
-                column_array[cnt] = col;
-            }
-            dataGridView.Columns.AddRange(column_array);
-
-            var bindingList = new BindingList<Balance>(dt.dataListToView);
-            var source = new BindingSource(bindingList, null);
-           
-
-            dataGridView.Columns["№"].DataPropertyName = "Name";
-            dataGridView.Columns["Версия"].DataPropertyName = "Version";
-            if (MyDtTable.residualType == false)
-            {
-                dataGridView.Columns["Диаметр"].DataPropertyName = "Dim";
-                dataGridView.Columns["Длина"].DataPropertyName = "Length";
-            }
-            else
-            {
-                dataGridView.Columns["Длина"].DataPropertyName = "Length";
-                dataGridView.Columns["Ширина"].DataPropertyName = "W";
-                dataGridView.Columns["Высота"].DataPropertyName = "H";
-            }
-            dataGridView.DataSource = source;
-        }
-        public void SuperPuper2()
-        {
-            dataGridView2.Columns.Clear();
-            dt.dataListToView = dt.GetItemsofTheSameVersion();
-            
-            dataGridView2.AutoGenerateColumns = false;
-            dataGridView2.AutoSize = true;
-            string[] columnName = null;
-
-            if (MyDtTable.residualType == false)
-            {
-                columnName = new string[] {  "№", "Диаметр", "Длина", "Версия"};
-            }
-            else { columnName = new string[] { "№","Длина", "Ширина", "Высота", "Версия"}; }
-
-            DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
-            for (int cnt = 0; cnt < columnName.Length; cnt++)
-            {
-                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
-                col.Name = columnName[cnt];
-                column_array[cnt] = col;
-            }
-            dataGridView2.Columns.AddRange(column_array);
-
-            var bindingList = new BindingList<Balance>(dt.dataListToView);
-            var source = new BindingSource(bindingList, null);
-            dataGridView2.Columns["№"].DataPropertyName = "Name";
-            dataGridView2.Columns["Версия"].DataPropertyName = "Version";
-
-            dataGridView2.DataSource = source;
-            if (MyDtTable.residualType == false)
-            {
-                dataGridView2.Columns["Диаметр"].DataPropertyName = "Dim";
-                dataGridView2.Columns["Длина"].DataPropertyName = "Length";
-                usInter.AddParametersOfDeletedWPLength(dt,dataGridView2, "Длина вырезаной заготовки");           
-            }
-            else
-            {
-                dataGridView2.Columns["Длина"].DataPropertyName = "Length";
-                dataGridView2.Columns["Ширина"].DataPropertyName = "W";
-                dataGridView2.Columns["Высота"].DataPropertyName = "H";
-                usInter.AddParametersOfDeletedWP(dt,dataGridView2, "Длина вырезаной заготовки", "Ширина вырезаной заготовки");  
-            }     
-        }
-
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             MyDtTable.itemToCutFrom = usInter.GetSelectedBalance(dataGridView);            
-            SuperPuper2();
+            usInter.SuperPuper2(dataGridView2, dt, usInter);
             usInter.FillTxtBoxes(txtName, txtWidthDim, txtLength, txtH);
         }
 
         private void CancelDeletingButton_Click(object sender, EventArgs e)
         {
-            dt.CancelCutting();
-            SuperPuper();
-            SuperPuper2();
+            dt.CancelCuttingWP();
+            usInter.SuperPuper(dataGridView, dt);
+            usInter.SuperPuper2(dataGridView2, dt, usInter);
         }
 
         private void DeleteResidualButton_Click(object sender, EventArgs e)
         {
-            dt.DeleteResidual();
-            SuperPuper();
-            SuperPuper2();
+            dt.DeleteResidualMaterial();
+            usInter.SuperPuper(dataGridView, dt);
+            usInter.SuperPuper2(dataGridView2, dt, usInter);
         }
 
         private void EditMaterialButton_Click(object sender, EventArgs e)
@@ -208,8 +119,22 @@ namespace ResidualMaterials
             usInter.ConvTextToDecimal(txtName, txtWidthDim, txtLength, txtH);
             dt.EditResidual();
 
-            SuperPuper();
-            SuperPuper2();
+            usInter.SuperPuper(dataGridView, dt);
+            usInter.SuperPuper2(dataGridView2, dt, usInter);
+        }
+
+        private void dataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            MyDtTable.itemToCutFrom = usInter.GetSelectedBalance(dataGridView);
+        }
+
+        private void checkWPFormBtn_Click(object sender, EventArgs e)
+        {            
+            usInter.CheckIfFieldsAreFilled(dataGridView,txtWidthWP, txtLengthWP);
+            usInter.ConvTxtToDecimal(txtWidthWP, txtLengthWP);
+            Form2 form2 = new Form2();
+            form2.Show();          
+        
         }
     } 
 }

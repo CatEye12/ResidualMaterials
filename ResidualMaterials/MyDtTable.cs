@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Data;
 using System.Data.SqlClient;
+using System;
 
 namespace ResidualMaterials
 {
@@ -12,6 +13,7 @@ namespace ResidualMaterials
         public MyDtTable()
         {
             dataList = new List<Balance>();
+            date = GetCurrentDate();
         }
         
         SqlConnection objCon;
@@ -26,13 +28,14 @@ namespace ResidualMaterials
         List<Balance> inputMaterial;
         public static bool residualType;
         public static bool isFieldsFilled;
+        DateTime date;
 
 
-        public static decimal widthDim { get; set; }
-        public static decimal length { get; set; }
-        public static decimal height { get; set; }
-        public static decimal lengthWP { get; set; }
-        public static decimal widthWP { get; set; }
+        public static int widthDim { get; set; }
+        public static int length { get; set; }
+        public static int height { get; set; }
+        public static int lengthWP { get; set; }
+        public static int widthWP { get; set; }
         public static int name { get; set; }
         public static int version { get; set; }
 
@@ -52,13 +55,14 @@ namespace ResidualMaterials
                     {
                         BalanceID = (int)reader["BalanceId"], 
                         Type = (bool)reader["Type"],
-                        Dim = (decimal)reader["Dim"],
-                        Length = (decimal)reader["Lenth"],
-                        W = (decimal)reader["W"],
-                        H = (decimal)reader["H"],
+                        Dim = (int)reader["Dim"],
+                        Length = (int)reader["Lenth"],
+                        W = (int)reader["W"],
+                        H = (int)reader["H"],
                         Name = (int)reader["Name"],
-                        Version = (int)reader["Version"]
-                    }); //Specify column index 
+                        Version = (int)reader["Version"],
+                        Date = Convert.ToDateTime(reader["Data"])
+                    });
                 }
             }
             objCon.Close();
@@ -75,7 +79,7 @@ namespace ResidualMaterials
                 item.AsEnumerable();
                 bal = new Balance() {BalanceID = item.Last().BalanceID, Type = item.Last().Type,
                                      Dim = item.Last().Dim, Length = item.Last().Length, W = item.Last().W,
-                                     H = item.Last().H, Name = item.Last().Name, Version = item.Last().Version};
+                                     H = item.Last().H, Name = item.Last().Name, Version = item.Last().Version, Date = item.Last().Date};
                 result.Add(bal);
             }                     
                                 
@@ -110,7 +114,7 @@ namespace ResidualMaterials
             }
         }
 
-        private List<Balance> ConvertInputDataToList(int n, decimal l, decimal w, decimal h)
+        private List<Balance> ConvertInputDataToList(int n, int l, int w, int h)
                 {
                     var list = new List<Balance>() { new Balance
                     { 
@@ -123,7 +127,7 @@ namespace ResidualMaterials
 
                     return list;
                 }
-        private List<Balance> ConvertInputDataToList(int n, decimal l, decimal dim)
+        private List<Balance> ConvertInputDataToList(int n, int l, int dim)
         {
             var list = new List<Balance>() { new Balance
             {
@@ -160,7 +164,7 @@ namespace ResidualMaterials
             objCon.Close();
             return maxBalanceID;
         }
-        private void SaveNewMaterialDb(int name, bool type, decimal dim, decimal length, decimal w, decimal h, int version)
+        private void SaveNewMaterialDb(int name, bool type, int dim, int length, int w, int h, int version)
         {
             objCon.Open();
             SqlCommand save = new SqlCommand("AddMaretial");
@@ -175,29 +179,34 @@ namespace ResidualMaterials
             save.Parameters.AddWithValue("@w", w);
             save.Parameters.AddWithValue("@h", h);
             save.Parameters.AddWithValue("@version", version);
+            save.Parameters.AddWithValue("@date", date);
             reader = save.ExecuteReader();
-            
+
             objCon.Close();
             if (LastBalanceId == 0)
             {
                 LastBalanceId = LastRowBalanceId();
             }
             else { LastBalanceId++; }
-            dataList.Add(new Balance {BalanceID = LastBalanceId, Version = lastVersion, Type = type, Dim = dim, Length = length, W = w, H = h, Name = name});            
+            dataList.Add(new Balance { BalanceID = LastBalanceId, Version = lastVersion, Type = type, Dim = dim, Length = length, W = w, H = h, Name = name, Date = date });
         }
-               
+
+        private DateTime GetCurrentDate()
+        {
+            return new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
+        }
 
         public void CutOut()
         {
-            decimal temp;
+            int temp;
 
             bool possOrNot = CheckingWorkpieceLessThanResidual();
             
             if (possOrNot == true)
             {
                 #region 
-                decimal new_Length = 0;
-                decimal new_Width = 0;
+                int new_Length = 0;
+                int new_Width = 0;
                 lastVersion = LastVersion(itemToCutFrom.BalanceID);
 
                 if (residualType == false)
@@ -254,25 +263,25 @@ namespace ResidualMaterials
                     //меняем значения длины/ширины обратно
                     temp = lengthWP;
                     lengthWP = widthWP;
-                    widthWP = temp;
-                    
+                    widthWP = temp;                    
                 }
 #endregion
                 SaveNewMaterialDb(itemToCutFrom.Name, itemToCutFrom.Type, itemToCutFrom.Dim, new_Length, new_Width, itemToCutFrom.H, lastVersion);
+                lastVersion = 0;
             }
             else { MessageBox.Show("Невозможно вырезать заготовку. Параметры заготовки больше параметров остатка!"); }
         }
 
         private bool CheckingWorkpieceLessThanResidual()
         {
-            decimal l = lengthWP;
-            decimal w = widthWP;
+            int l = lengthWP;
+            int w = widthWP;
             if (isFieldsFilled == true)
             {
                 #region если поля заполнены
                 if (residualType == true)
                 {
-                    decimal temp;
+                    int temp;
 
                     //определяем большую сторону заготовки
                     if (l >= w) { }
@@ -362,7 +371,7 @@ namespace ResidualMaterials
             return id;
         }
 
-        public void CancelCutting()
+        private void DeleteItemFromBD()
         {
             objCon.Open();
             SqlCommand cancelCutting = new SqlCommand("CancelCutting", objCon);
@@ -377,15 +386,23 @@ namespace ResidualMaterials
             dataList.RemoveAt(RowToInsert());
         }
 
-        public void DeleteResidual()
+        public void DeleteResidualMaterial()
         {
             if (itemToCutFrom.Version == 0)
             {
-                CancelCutting();
+                DeleteItemFromBD();
             }
             else { MessageBox.Show("Нельзя удалить материал!"); }
         }
+        public void CancelCuttingWP()
+        {
+            if (itemToCutFrom.Version > 0)
+            {
+                DeleteItemFromBD();
+            }
+            else { MessageBox.Show("Нельзя отменить вырезание!"); }
 
+        }
         public void EditResidual()
         {
             if (itemToCutFrom.Version == 0)

@@ -51,10 +51,10 @@
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.CreateButton = new System.Windows.Forms.Button();
             this.cutOutBtn = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.CancelDeletingButton = new System.Windows.Forms.Button();
             this.DeleteResidualButton = new System.Windows.Forms.Button();
             this.EditMaterialButton = new System.Windows.Forms.Button();
+            this.checkWPFormBtn = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -253,15 +253,18 @@
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
+            this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(584, 342);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellClick);
+            this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.dataGridView2);
+            this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox3.Location = new System.Drawing.Point(615, 244);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(590, 361);
@@ -279,6 +282,7 @@
             this.dataGridView2.Location = new System.Drawing.Point(3, 16);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.ReadOnly = true;
+            this.dataGridView2.RowHeadersVisible = false;
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView2.Size = new System.Drawing.Size(584, 342);
             this.dataGridView2.TabIndex = 0;
@@ -303,17 +307,9 @@
             this.cutOutBtn.UseVisualStyleBackColor = true;
             this.cutOutBtn.Click += new System.EventHandler(this.CutOut_Click);
             // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.panel1.Location = new System.Drawing.Point(1024, 24);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(163, 141);
-            this.panel1.TabIndex = 7;
-            // 
             // CancelDeletingButton
             // 
-            this.CancelDeletingButton.Location = new System.Drawing.Point(695, 68);
+            this.CancelDeletingButton.Location = new System.Drawing.Point(695, 107);
             this.CancelDeletingButton.Name = "CancelDeletingButton";
             this.CancelDeletingButton.Size = new System.Drawing.Size(131, 41);
             this.CancelDeletingButton.TabIndex = 8;
@@ -341,15 +337,24 @@
             this.EditMaterialButton.UseVisualStyleBackColor = true;
             this.EditMaterialButton.Click += new System.EventHandler(this.EditMaterialButton_Click);
             // 
+            // checkWPFormBtn
+            // 
+            this.checkWPFormBtn.Location = new System.Drawing.Point(696, 68);
+            this.checkWPFormBtn.Name = "checkWPFormBtn";
+            this.checkWPFormBtn.Size = new System.Drawing.Size(130, 22);
+            this.checkWPFormBtn.TabIndex = 11;
+            this.checkWPFormBtn.UseVisualStyleBackColor = true;
+            this.checkWPFormBtn.Click += new System.EventHandler(this.checkWPFormBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1217, 633);
+            this.Controls.Add(this.checkWPFormBtn);
             this.Controls.Add(this.EditMaterialButton);
             this.Controls.Add(this.DeleteResidualButton);
             this.Controls.Add(this.CancelDeletingButton);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.cutOutBtn);
             this.Controls.Add(this.CreateButton);
@@ -390,12 +395,12 @@
         private System.Windows.Forms.Button cutOutBtn;
         private System.Windows.Forms.Label lblWidthDimWP;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.Button CancelDeletingButton;
         private System.Windows.Forms.Button DeleteResidualButton;
         private System.Windows.Forms.Button EditMaterialButton;
+        private System.Windows.Forms.Button checkWPFormBtn;
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 
@@ -74,14 +75,14 @@ namespace ResidualMaterials
             {                
                 if (MyDtTable.residualType == false)
                 {
-                    MyDtTable.widthDim = Convert.ToDecimal(w.Text);
-                    MyDtTable.length = Convert.ToDecimal(l.Text);
+                    MyDtTable.widthDim = Convert.ToInt32(w.Text);
+                    MyDtTable.length = Convert.ToInt32(l.Text);
                 }
                 else
                 {
-                    MyDtTable.widthDim = Convert.ToDecimal(w.Text);
-                    MyDtTable.length = Convert.ToDecimal(l.Text);
-                    MyDtTable.height = Convert.ToDecimal(h.Text);
+                    MyDtTable.widthDim = Convert.ToInt32(w.Text);
+                    MyDtTable.length = Convert.ToInt32(l.Text);
+                    MyDtTable.height = Convert.ToInt32(h.Text);
                 }
                 MyDtTable.name = Convert.ToInt32(name.Text);
             }
@@ -94,12 +95,12 @@ namespace ResidualMaterials
             {
                 if (MyDtTable.residualType == false)
                 {
-                    MyDtTable.lengthWP = Convert.ToDecimal(l.Text);
+                    MyDtTable.lengthWP = Convert.ToInt32(l.Text);
                 }
                 else
                 {
-                    MyDtTable.widthWP = Convert.ToDecimal(w.Text);
-                    MyDtTable.lengthWP = Convert.ToDecimal(l.Text);
+                    MyDtTable.widthWP = Convert.ToInt32(w.Text);
+                    MyDtTable.lengthWP = Convert.ToInt32(l.Text);
                 }
             }
             else { }
@@ -125,7 +126,7 @@ namespace ResidualMaterials
 
             for (int i = 0; i < list.Count-1; i++)
             {
-                dgv[colName, i].Value = list[i].Length - list[i+1].Length ;
+                dgv[colName, i].Value = list[i].Length - list[i+1].Length;
             }
         }
         public void AddParametersOfDeletedWP(dynamic j, DataGridView dgv, string colNameLength, string colNameWidth)
@@ -142,7 +143,7 @@ namespace ResidualMaterials
             }
         }
 
-        public void FillTxtBoxes(TextBox name, TextBox widthDim, TextBox length, TextBox height)           
+        public void FillTxtBoxes(TextBox name, TextBox widthDim, TextBox length, TextBox height)
         {
             name.Text = MyDtTable.itemToCutFrom.Name.ToString();
             length.Text = MyDtTable.itemToCutFrom.Length.ToString();
@@ -155,13 +156,106 @@ namespace ResidualMaterials
             else widthDim.Text = MyDtTable.itemToCutFrom.Dim.ToString();     
         }
 
-        public void ClearTxtBoxes(TextBox name, TextBox widthDim, TextBox length, TextBox height)
+        public void ClearTxtBoxes(TextBox name, TextBox widthDim, TextBox length, TextBox height, TextBox length2, TextBox width)
         {
             name.Text = "";
             widthDim.Text = "";
             length.Text = "";
             height.Text = "";
+            length2.Text = "";
+            width.Text = "";
+
         }
-        
+        public void SuperPuper(DataGridView dgv, dynamic o)
+        {
+            dgv.Columns.Clear();
+            o.dataListToView = o.MakingDataList();
+
+            dgv.AutoGenerateColumns = false;
+            dgv.AutoSize = true;
+
+            string[] columnName = null;
+
+            if (MyDtTable.residualType == false)
+            {
+                columnName = new string[] { "№", "Диаметр", "Длина", "Версия", "Дата добавления" };
+            }
+            else { columnName = new string[] { "№", "Длина", "Ширина", "Толщина", "Версия", "Дата добавления"}; }
+
+
+            DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
+            for (int cnt = 0; cnt < columnName.Length; cnt++)
+            {
+                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
+                col.Name = columnName[cnt];
+                column_array[cnt] = col;
+            }
+            dgv.Columns.AddRange(column_array);
+
+            var bindingList = new BindingList<Balance>(o.dataListToView);
+            var source = new BindingSource(bindingList, null);
+
+
+            dgv.Columns["№"].DataPropertyName = "Name";
+            dgv.Columns["Версия"].DataPropertyName = "Version";
+            dgv.Columns["Дата добавления"].DataPropertyName = "Date";
+            if (MyDtTable.residualType == false)
+            {
+                dgv.Columns["Диаметр"].DataPropertyName = "Dim";
+                dgv.Columns["Длина"].DataPropertyName = "Length";
+            }
+            else
+            {
+                dgv.Columns["Длина"].DataPropertyName = "Length";
+                dgv.Columns["Ширина"].DataPropertyName = "W";
+                dgv.Columns["Толщина"].DataPropertyName = "H";
+            }
+            dgv.DataSource = source;
+        }
+        public void SuperPuper2(DataGridView dgv, dynamic oDT, dynamic oUsInter)
+        {
+            dgv.Columns.Clear();
+            oDT.dataListToView = oDT.GetItemsofTheSameVersion();
+
+            dgv.AutoGenerateColumns = false;
+            dgv.AutoSize = true;
+            string[] columnName = null;
+
+            if (MyDtTable.residualType == false)
+            {
+                columnName = new string[] { "№", "Диаметр", "Длина", "Версия", "Дата вырезания" };
+            }
+            else { columnName = new string[] { "№", "Длина", "Ширина", "Толщина", "Версия", "Дата вырезания" }; }
+
+            DataGridViewColumn[] column_array = new DataGridViewColumn[columnName.Length];
+            for (int cnt = 0; cnt < columnName.Length; cnt++)
+            {
+                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
+                col.Name = columnName[cnt];
+                column_array[cnt] = col;
+            }
+            dgv.Columns.AddRange(column_array);
+
+            var bindingList = new BindingList<Balance>(oDT.dataListToView);
+            var source = new BindingSource(bindingList, null);
+            dgv.Columns["№"].DataPropertyName = "Name";
+            dgv.Columns["Версия"].DataPropertyName = "Version";
+            dgv.Columns["Дата вырезания"].DataPropertyName = "Date";
+
+            dgv.DataSource = source;
+            if (MyDtTable.residualType == false)
+            {
+                dgv.Columns["Диаметр"].DataPropertyName = "Dim";
+                dgv.Columns["Длина"].DataPropertyName = "Length";
+                oUsInter.AddParametersOfDeletedWPLength(oDT, dgv, "Длина вырезаной заготовки");
+            }
+            else
+            {
+                dgv.Columns["Длина"].DataPropertyName = "Length";
+                dgv.Columns["Ширина"].DataPropertyName = "W";
+                dgv.Columns["Толщина"].DataPropertyName = "H";
+                oUsInter.AddParametersOfDeletedWP(oDT, dgv, "Длина вырезаной заготовки", "Ширина вырезаной заготовки");
+            }
+        }
     }
 }
